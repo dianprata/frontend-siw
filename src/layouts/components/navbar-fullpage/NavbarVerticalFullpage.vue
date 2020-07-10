@@ -12,24 +12,43 @@
 <template>
   <div class="relative">
 
-    <div class="vx-navbar-wrapper" :class="classObj" style="height: auto">
+    <div class="vx-navbar-wrapper" :class="classObj">
 
-      <vs-navbar class="vx-navbar navbar-custom navbar-skelton" :color="navbarColorLocal" :class="textColor">
+      <vs-navbar class="vx-navbar navbar-skelton sm:collapse"
+                 :color="navbarColorLocal" :class="textColor">
 
-        <router-link tag="div" to="/" class="vx-logo cursor-pointer flex items-center">
-          <logo class="w-10 mr-4 fill-current text-primary" />
-          <span class="vx-logo-text text-primary">SIP</span>
-        </router-link>
+        <div slot="title" class="flex items-center w-full">
+          <vs-navbar-title>
+            <router-link to="/">
+              <span class="vx-logo-text text-primary">SIP</span>
+            </router-link>
+          </vs-navbar-title>
+          <vs-spacer />
+          <search-bar class="md:hidden" />
+          <vs-button type="flat" to="/login" class="md:hidden px-4">Login</vs-button>
+        </div>
 
         <!-- SM - OPEN SIDEBAR BUTTON -->
-<!--        <feather-icon class="sm:inline-flex xl:hidden cursor-pointer p-2" icon="MenuIcon" @click.stop="showSidebar" />-->
+<!--        <feather-icon class="sm:inline-flex md:hidden cursor-pointer p-2" icon="MenuIcon" @click.stop="showSidebar" />-->
+
+        <vs-navbar-item>
+          <router-link to="/">Beranda</router-link>
+        </vs-navbar-item>
+        <vs-navbar-item>
+          <router-link to="#berita">Berita</router-link>
+        </vs-navbar-item>
+        <vs-navbar-item>
+          <router-link to="#tentang">Tentang</router-link>
+        </vs-navbar-item>
+        <vs-navbar-item>
+          <router-link to="#kontak">Kontak</router-link>
+        </vs-navbar-item>
 
         <vs-spacer />
 
-        <search-bar />
+        <search-bar class="hidden md:flex" />
 
-        <profile-drop-down />
-
+        <vs-button type="flat" to="/login" class="hidden md:flex">Login</vs-button>
       </vs-navbar>
     </div>
   </div>
@@ -38,8 +57,6 @@
 
 <script>
 import SearchBar            from "./components/SearchBar.vue"
-import ProfileDropDown      from "./components/ProfileDropDown.vue"
-import Logo                 from "../Logo.vue"
 
 export default {
   name: "navbar-vertical-fullpage",
@@ -50,9 +67,7 @@ export default {
     },
   },
   components: {
-    Logo,
     SearchBar,
-    ProfileDropDown,
   },
   computed: {
     navbarColorLocal() {

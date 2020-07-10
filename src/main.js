@@ -46,8 +46,10 @@ import router from './router'
 // Vuex Store
 import store from './store/store'
 
+
 // Vuexy Admin Filters
 import './filters/filters'
+
 
 // Vuejs - Vue wrapper for hammerjs
 import { VueHammer } from 'vue2-hammer'
@@ -58,6 +60,9 @@ Vue.use(VueHammer)
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 
+// VeeValidate
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
 
 // Feather font icon
 require('./assets/css/iconfont.css')

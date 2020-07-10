@@ -525,3 +525,35 @@ ul.bordered-items {
     border-bottom: 1px solid $grey-light;
   }
 }
+
+.vs-navbar-submenu {
+  .vs-navbar-item-primary .router-link-exact-active.router-link-active {
+    border-bottom: 2px solid rgba(var(--vs-primary),1);
+    color: rgba(var(--vs-primary),1);
+  }
+  .vs-navbar-item-primary {
+    &:hover {
+      >a {
+        border-bottom: 2px solid rgba(var(--vs-primary), 1);
+        color: rgba(var(--vs-primary), 1);
+      }
+    }
+  }
+}
+.vs-navbar {
+  .vs-navbar-item-primary .router-link-exact-active.router-link-active {
+    border-bottom: 2px solid rgba(var(--vs-primary),1);
+    color: rgba(var(--vs-primary),1);
+  }
+  .vs-navbar-item-primary {
+    >a {
+      border-bottom: 2px solid transparent;
+    }
+    &:hover {
+      >a {
+        border-bottom: 2px solid rgba(var(--vs-primary),1);
+        color: rgba(var(--vs-primary),1);
+      }
+    }
+  }
+}

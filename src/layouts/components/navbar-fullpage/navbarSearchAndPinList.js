@@ -2,8 +2,10 @@ export default {
   pages: {
     key: "title",
     data: [
-      {title: 'Home',   url: '/',      icon: 'HomeIcon', is_bookmarked: false},
-      {title: 'Page 2', url: '/page2', icon: 'FileIcon', is_bookmarked: false},
+      {title: 'Beranda',    url: '/',           icon: 'HomeIcon',       is_bookmarked: false},
+      {title: 'Berita',     url: '#berita',     icon: 'FileTextIcon',   is_bookmarked: false},
+      {title: 'Tentang',    url: '#tentang',    icon: 'FileTextIcon',   is_bookmarked: false},
+      {title: 'Kontak',     url: '#kontak',     icon: 'PhoneIcon',      is_bookmarked: false},
     ]
   }
 }

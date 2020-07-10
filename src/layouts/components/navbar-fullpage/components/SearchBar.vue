@@ -50,6 +50,7 @@
 
 <script>
 import VxAutoSuggest from '@/components/vx-auto-suggest/VxAutoSuggest.vue';
+import navbarSearchAndPinList from "../navbarSearchAndPinList";
 
 export default {
   components: {
@@ -57,7 +58,7 @@ export default {
   },
   data() {
     return {
-      navbarSearchAndPinList: this.$store.state.navbarSearchAndPinList,
+      navbarSearchAndPinList: navbarSearchAndPinList,
       showFullSearch: false,
     }
   },

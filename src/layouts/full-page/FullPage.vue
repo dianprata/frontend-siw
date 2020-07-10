@@ -9,7 +9,7 @@
 
 
 <template>
-  <div class="layout--full-page">
+  <div class="layout--full-page navbar-floating">
     <navbar-vertical-fullpage
         :navbarColor="navbarColor"
         :class="[
