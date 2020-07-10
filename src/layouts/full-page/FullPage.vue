@@ -16,7 +16,9 @@
           {'text-white' : isNavbarDark  && !isThemeDark},
           {'text-base'  : !isNavbarDark && isThemeDark}
         ]" />
-    <router-view></router-view>
+    <transition name="fade-bottom">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
