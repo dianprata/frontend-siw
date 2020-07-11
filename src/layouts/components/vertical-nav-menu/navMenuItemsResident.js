@@ -15,4 +15,10 @@ export default [
     slug: "home",
     icon: "HomeIcon",
   },
+  {
+    url: "/kritik-saran",
+    name: "Kritik & Saran",
+    slug: "kritik-saran",
+    icon: "MessageSquareIcon"
+  }
 ]

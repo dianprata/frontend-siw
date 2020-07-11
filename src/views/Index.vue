@@ -117,7 +117,7 @@
                   <p class="mb-4 text-3xl font-semibold">12.617</p>
                 </div>
                 <div class="w-1/3 border border-solid d-theme-border-grey-light border-r-0 border-b-0">
-                  <p class="mt-4">Positif Sembuh</p>
+                  <p class="mt-4">Sembuh</p>
                   <p class="mb-4 text-3xl font-semibold">10.561</p>
                 </div>
                 <div class="w-1/3 border border-solid d-theme-border-grey-light border-r-0 border-b-0">
@@ -259,7 +259,7 @@
         },
         sessionsByDeviceDonut: {
           chartOptions: {
-            labels: ['Positif', 'Positif Sembuh', 'Meninggal Dunia'],
+            labels: ['Positif', 'Sembuh', 'Meninggal Dunia'],
             dataLabels: {
               enabled: false
             },

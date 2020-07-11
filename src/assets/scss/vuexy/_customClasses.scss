@@ -526,6 +526,21 @@ ul.bordered-items {
   }
 }
 
+.vs-con-textarea {
+  border: none !important;
+}
+
+.vs-textarea-primary {
+  .vs-textarea {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    &:focus {
+      border: 1px solid rgba(var(--vs-primary), 1);
+      -webkit-box-shadow: 0 3px 10px 0 rgba(0,0,0,.15);
+      box-shadow: 0 3px 10px 0 rgba(0,0,0,.15);
+    }
+  }
+}
+
 .vs-navbar-submenu {
   .vs-navbar-item-primary .router-link-exact-active.router-link-active {
     border-bottom: 2px solid rgba(var(--vs-primary),1);

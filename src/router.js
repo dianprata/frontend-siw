@@ -82,15 +82,41 @@ const router = new Router({
               {
                 path: '/home',
                 name: 'home',
-                meta: { authRequired: true},
-                component: () => import('./views/Home.vue')
+                component: () => import('./views/Home.vue'),
+                meta: {
+                  authRequired: true,
+                  breadcrumb: [
+                    { title: 'Home', active: true },
+                  ],
+                  pageTitle: 'Home',
+                },
               },
               {
                 path: '/page2',
                 name: 'page-2',
-                meta: { authRequired: true},
-                component: () => import('./views/Page2.vue')
+                component: () => import('./views/Page2.vue'),
+                meta: {
+                  authRequired: true,
+                  breadcrumb: [
+                    { title: 'Home', url: '/home' },
+                    { title: 'page-2', active: true },
+                  ],
+                  pageTitle: 'Page 2',
+                }
               },
+              {
+                path: '/kritik-saran',
+                name: 'kritik-saran',
+                component: () => import('./views/resident/CriticsSuggest.vue'),
+                meta: {
+                  authRequired: true,
+                  breadcrumb: [
+                    { title: 'Home', url: '/home' },
+                    { title: 'Kritik & Saran', active: true },
+                  ],
+                  pageTitle: 'Kritik & Saran',
+                }
+              }
             ],
         },
         // Redirect to 404 page, if no match found

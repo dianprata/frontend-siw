@@ -13,7 +13,7 @@
     <div class="vx-breadcrumb" :class="data.staticClass">
         <ul class="flex flex-wrap items-center">
             <li class="inline-flex items-end">
-                <router-link to="/">
+                <router-link to="/home">
                     <feather-icon icon="HomeIcon" svgClasses="h-5 w-5 mb-1 stroke-current text-primary" />
                 </router-link>
                 <span class="breadcrumb-separator mx-2"><feather-icon :icon="props.isRTL ? 'ChevronsLeftIcon' : 'ChevronsRightIcon'" svgClasses="w-4 h-4" /></span>

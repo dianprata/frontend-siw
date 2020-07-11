@@ -20,26 +20,6 @@
             <span class="ml-2">Profile</span>
           </li>
 
-          <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
-            <feather-icon icon="MailIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Inbox</span>
-          </li>
-
-          <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
-            <feather-icon icon="CheckSquareIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Tasks</span>
-          </li>
-
-          <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
-            <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Chat</span>
-          </li>
-
-          <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
-            <feather-icon icon="HeartIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Wish List</span>
-          </li>
-
           <vs-divider class="m-1" />
 
           <li
@@ -69,22 +49,22 @@ export default {
   },
   methods: {
     logout() {
-      let payload = {};
-      if(this.activeUserInfo.role_id === 1) {
-        payload = {admin_logout: true}
-      } else {
-        payload = {resident_logout: true}
-      }
-      auth.logout(payload)
-        .then((res) => {
-          if(res.data.data) {
-            this.$store.commit('UPDATE_USER_INFO', {role_id: ''})
-            localStorage.removeItem('userInfo');
-            this.$router.go(this.$router.currentRoute);
-          }
-        }).catch((err) => {
+      new Promise((resolve, reject) => {
+        auth.logout(this.activeUserInfo.role_id)
+          .then((res) => {
+            if(res.data.data) {
+              this.$store.commit('UPDATE_USER_INFO', {role_id: ''})
+              localStorage.removeItem('userInfo');
+              this.$router.go(this.$router.currentRoute);
+              resolve(res)
+            } else {
+              reject('error');
+            }
+          }).catch((err) => {
+          reject(err)
           throw new Error(err)
-      })
+        })
+      });
     },
   }
 }
