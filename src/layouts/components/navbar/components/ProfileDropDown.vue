@@ -2,8 +2,8 @@
   <div class="the-navbar__user-meta flex items-center" v-if="activeUserInfo.displayName">
 
     <div class="text-right leading-tight hidden sm:block">
-      <p class="font-semibold">{{ activeUserInfo.displayName }}</p>
-      <small>Available</small>
+      <p class="font-semibold">{{ activeUserInfo.name | capitalize }}</p>
+      <small>{{ activeUserInfo.status | capitalize }}</small>
     </div>
 
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+  import auth from '@/http/auth.js'
 export default {
   data() {
     return {
@@ -68,7 +69,22 @@ export default {
   },
   methods: {
     logout() {
-        this.$router.push('/').catch(() => {})
+      let payload = {};
+      if(this.activeUserInfo.role_id === 1) {
+        payload = {admin_logout: true}
+      } else {
+        payload = {resident_logout: true}
+      }
+      auth.logout(payload)
+        .then((res) => {
+          if(res.data.data) {
+            this.$store.commit('UPDATE_USER_INFO', {role_id: ''})
+            localStorage.removeItem('userInfo');
+            this.$router.push('/').catch(() => {})
+          }
+        }).catch((err) => {
+          throw new Error(err)
+      })
     },
   }
 }

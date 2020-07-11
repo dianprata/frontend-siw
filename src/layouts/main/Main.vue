@@ -13,7 +13,7 @@
 
     <v-nav-menu
       :navMenuItems = "navMenuItems"
-      title         = "Vuexy"
+      title         = "SIP"
       parent        = ".layout--main" />
 
     <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
@@ -115,14 +115,15 @@
 
 
 <script>
-import BackToTop           from 'vue-backtotop'
-import HNavMenu            from "@/layouts/components/horizontal-nav-menu/HorizontalNavMenu.vue"
-import navMenuItems        from "@/layouts/components/vertical-nav-menu/navMenuItems.js"
-import TheNavbarHorizontal from '@/layouts/components/navbar/TheNavbarHorizontal.vue'
-import TheNavbarVertical   from '@/layouts/components/navbar/TheNavbarVertical.vue'
-import TheFooter           from '@/layouts/components/TheFooter.vue'
-import themeConfig         from '@/../themeConfig.js'
-import VNavMenu            from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
+import BackToTop            from 'vue-backtotop'
+import HNavMenu             from "@/layouts/components/horizontal-nav-menu/HorizontalNavMenu.vue"
+import navMenuItemsAdmin    from "@/layouts/components/vertical-nav-menu/navMenuItemsAdmin.js"
+import navMenuItemsResident from "@/layouts/components/vertical-nav-menu/navMenuItemsResident.js"
+import TheNavbarHorizontal  from '@/layouts/components/navbar/TheNavbarHorizontal.vue'
+import TheNavbarVertical    from '@/layouts/components/navbar/TheNavbarVertical.vue'
+import TheFooter            from '@/layouts/components/TheFooter.vue'
+import themeConfig          from '@/../themeConfig.js'
+import VNavMenu             from '@/layouts/components/vertical-nav-menu/VerticalNavMenu.vue'
 
 export default {
   components: {
@@ -140,7 +141,6 @@ export default {
       isNavbarDark      : false,
       navbarColor       : themeConfig.navbarColor || '#fff',
       navbarType        : themeConfig.navbarType  || 'floating',
-      navMenuItems      : navMenuItems,
       routerTransition  : themeConfig.routerTransition || 'none',
       routeTitle        : this.$route.meta.pageTitle
     }
@@ -158,6 +158,13 @@ export default {
     }
   },
   computed: {
+    navMenuItems() {
+      if(this.$store.state.AppActiveUser.role_id === 1) {
+        return navMenuItemsAdmin
+      } else {
+        return navMenuItemsResident
+      }
+    },
     bodyOverlay() { return this.$store.state.bodyOverlay },
     contentAreaClass() {
       if(this.mainLayoutType === "vertical") {

@@ -10,6 +10,7 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
+import state from './store/state.js'
 
 Vue.use(Router)
 
@@ -37,9 +38,29 @@ const router = new Router({
             component: () => import('./views/Index.vue')
           },
           {
+            path: '/berita',
+            name: 'news',
+            component: () => import('./views/full-page/News.vue')
+          },
+          {
+            path: '/tentang',
+            name: 'about',
+            component: () => import('./views/full-page/About.vue')
+          },
+          {
+            path: '/kontak',
+            name: 'contact',
+            component: () => import('./views/full-page/Contact.vue')
+          },
+          {
             path: '/login',
             name: 'page-login',
             component: () => import('./views/pages/Login.vue')
+          },
+          {
+            path: '/login-admin',
+            name: 'page-login-admin',
+            component: () => import('./views/pages/LoginAdmin.vue')
           },
           {
             path: '/pages/error-404',
@@ -61,11 +82,13 @@ const router = new Router({
               {
                 path: '/home',
                 name: 'home',
+                meta: { authRequired: true},
                 component: () => import('./views/Home.vue')
               },
               {
                 path: '/page2',
                 name: 'page-2',
+                meta: { authRequired: true},
                 component: () => import('./views/Page2.vue')
               },
             ],
@@ -84,6 +107,19 @@ router.afterEach(() => {
     if (appLoading) {
         appLoading.style.display = "none";
     }
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.authRequired) {
+    if(!localStorage.getItem('userInfo') || state.AppActiveUser.role_id === '') {
+      router.push({ path: '/login-admin' })
+    } else {
+      next()
+    }
+    next()
+  } else {
+    next()
+  }
+});
 
 export default router

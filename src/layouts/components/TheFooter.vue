@@ -13,8 +13,8 @@
     <footer class="the-footer flex-wrap justify-between" :class="classes">
         <p>
           <span>COPYRIGHT &copy;</span>
-          <span>{{ new Date().getFullYear() }} </span>
-          <a href="https://1.envato.market/vuexy_admin" target="_blank" rel="nofollow">Pixinvent</a>
+          <span>2020 </span>
+          <a href="/">Sistem Informasi Penduduk</a>
           <span class="hidden sm:inline-block">, All rights Reserved</span>
         </p>
         <span class="md:flex hidden items-center">

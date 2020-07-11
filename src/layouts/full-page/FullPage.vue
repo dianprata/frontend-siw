@@ -19,15 +19,18 @@
     <transition name="fade-bottom">
       <router-view></router-view>
     </transition>
+    <the-footer />
   </div>
 </template>
 
 <script>
   import NavbarVerticalFullpage from "../components/navbar-fullpage/NavbarVerticalFullpage";
   import themeConfig         from '@/../themeConfig.js'
+  import TheFooter           from '@/layouts/components/TheFooter.vue'
   export default {
     components: {
-      NavbarVerticalFullpage
+      NavbarVerticalFullpage,
+      'the-footer': TheFooter
     },
     data() {
       return {

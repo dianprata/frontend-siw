@@ -24,7 +24,7 @@
               <div class="p-8 login-tabs-container">
 
                 <div class="vx-card__title mb-6">
-                  <h4 class="mb-4">Login</h4>
+                  <h4 class="mb-4">Login ADMIN</h4>
                   <h6>Selamat Datang di <b>SIP</b></h6>
                 </div>
 
@@ -32,14 +32,14 @@
                   <vs-input
                       data-vv-validate-on="blur"
                       v-validate="'required'"
-                      name="nik"
+                      name="username"
                       icon-no-border
                       icon="icon icon-user"
                       icon-pack="feather"
-                      label-placeholder="NIK"
-                      v-model="nik"
+                      label-placeholder="Username"
+                      v-model="username"
                       class="w-full"/>
-                  <span class="text-danger text-sm">{{ errors.first('nik') }}</span>
+                  <span class="text-danger text-sm">{{ errors.first('username') }}</span>
 
                   <vs-input
                       data-vv-validate-on="blur"
@@ -75,14 +75,14 @@
 export default{
   data() {
     return {
-      nik: "",
+      username: "",
       password: "",
       checkbox_remember_me: false,
     }
   },
   computed: {
     validateForm() {
-      return !this.errors.any() && this.nik !== '' && this.password !== '';
+      return !this.errors.any() && this.username !== '' && this.password !== '';
     },
   },
   methods: {
@@ -90,7 +90,8 @@ export default{
       this.$vs.loading();
       new Promise((resolve, reject) => {
         const payload = {
-          nik: this.nik,
+          admin_login: true,
+          username: this.username,
           password: this.password
         };
         auth.login(payload)
@@ -103,21 +104,43 @@ export default{
               resolve(res);
             } else {
               this.$vs.loading.close();
-              reject({message: "Wrong NIK or Password"})
+              reject({message: "Wrong Username or Password"})
             }
           }).catch((err) => {
-          this.$vs.notify({
-            title: 'Login Gagal!',
-            text: err.response.data.error_message,
-            iconPack: 'feather',
-            icon: 'icon-alert-circle',
-            color: 'danger'
-          });
-          this.$vs.loading.close();
-          reject(err.response.data.error_message)
+            this.$vs.notify({
+              title: 'Login Gagal!',
+              text: err.response.data.error_message,
+              iconPack: 'feather',
+              icon: 'icon-alert-circle',
+              color: 'danger'
+            });
+            this.$vs.loading.close();
+            reject(err.response.data.error_message)
         })
       })
     },
+    checkLogin() {
+      // If user is already logged in notify
+      if (localStorage.getItem('userInfo') && this.$store.state.AppActiveUser.role_id !== '') {
+
+        // Close animation if passed as payload
+        // this.$vs.loading.close()
+
+        this.$vs.notify({
+          title: 'Login Attempt',
+          text: 'You are already logged in!',
+          iconPack: 'feather',
+          icon: 'icon-alert-circle',
+          color: 'warning'
+        });
+        this.$router.push('/home');
+        return false
+      }
+      return true
+    },
+  },
+  mounted() {
+    this.checkLogin();
   }
 }
 </script>

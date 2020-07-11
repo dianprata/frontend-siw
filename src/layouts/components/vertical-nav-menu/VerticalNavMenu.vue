@@ -30,8 +30,12 @@
         <div class="header-sidebar flex items-end justify-between" slot="header">
 
           <!-- Logo -->
-          <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/">
-            <logo class="w-10 mr-4 fill-current text-primary" />
+          <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/home">
+<!--            <logo class="w-10 mr-4 fill-current text-primary" />-->
+            <vs-icon icon="strikethrough_s"
+                     color="rgb(var(--vs-primary))"
+                     class="mr-4"
+                     size="35px"></vs-icon>
             <span class="vx-logo-text text-primary" v-show="isMouseEnter || !reduce" v-if="title">{{ title }}</span>
           </router-link>
           <!-- /Logo -->
@@ -118,7 +122,7 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import VNavMenuGroup from './VerticalNavMenuGroup.vue'
 import VNavMenuItem from './VerticalNavMenuItem.vue'
 
-import Logo from "../Logo.vue"
+// import Logo from "../Logo.vue"
 
 export default {
   name: 'v-nav-menu',
@@ -126,7 +130,6 @@ export default {
     VNavMenuGroup,
     VNavMenuItem,
     VuePerfectScrollbar,
-    Logo
   },
   props: {
     logo:             { type: String },

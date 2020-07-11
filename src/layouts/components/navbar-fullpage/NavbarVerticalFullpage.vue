@@ -25,7 +25,8 @@
           </vs-navbar-title>
           <vs-spacer />
           <search-bar class="md:hidden" />
-          <vs-button type="flat" to="/login" class="md:hidden px-4">Login</vs-button>
+          <vs-button type="flat" to="/login" class="md:hidden px-4" v-if="!isAuthenticated">Login</vs-button>
+          <profile-drop-down v-else class="md:hidden"/>
         </div>
 
         <!-- SM - OPEN SIDEBAR BUTTON -->
@@ -35,20 +36,21 @@
           <router-link to="/">Beranda</router-link>
         </vs-navbar-item>
         <vs-navbar-item>
-          <router-link to="#berita">Berita</router-link>
+          <router-link to="/berita">Berita</router-link>
         </vs-navbar-item>
         <vs-navbar-item>
-          <router-link to="#tentang">Tentang</router-link>
+          <router-link to="/tentang">Tentang</router-link>
         </vs-navbar-item>
         <vs-navbar-item>
-          <router-link to="#kontak">Kontak</router-link>
+          <router-link to="/kontak">Kontak</router-link>
         </vs-navbar-item>
 
         <vs-spacer />
 
         <search-bar class="hidden md:flex" />
 
-        <vs-button type="flat" to="/login" class="hidden md:flex">Login</vs-button>
+        <vs-button type="flat" to="/login" class="hidden md:flex" v-if="!isAuthenticated">Login</vs-button>
+        <profile-drop-down v-else class="hidden md:flex"/>
       </vs-navbar>
     </div>
   </div>
@@ -56,7 +58,8 @@
 
 
 <script>
-import SearchBar            from "./components/SearchBar.vue"
+import SearchBar from "./components/SearchBar.vue"
+import ProfileDropDown from "./components/ProfileDropDown";
 
 export default {
   name: "navbar-vertical-fullpage",
@@ -68,8 +71,16 @@ export default {
   },
   components: {
     SearchBar,
+    ProfileDropDown
   },
   computed: {
+    isAuthenticated() {
+      if(!localStorage.getItem('userInfo') || this.$store.state.AppActiveUser.role_id === '') {
+        return false
+      } else {
+        return true
+      }
+    },
     navbarColorLocal() {
       return this.$store.state.theme === "dark" && this.navbarColor === "#fff" ? "#10163a" : this.navbarColor
     },

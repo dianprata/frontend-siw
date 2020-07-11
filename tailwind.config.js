@@ -70,6 +70,11 @@ module.exports = {
       'white': '#ffffff',
       'grey': '#b8c2cc',
       'grey-light': '#dae1e7',
+      'primary' : '#0f4c75',
+      'success' : '#28C76F',
+      'danger'  : '#EA5455',
+      'warning' : '#FF9F43',
+      'dark'    : '#1E1E1E',
     },
 
     /*
@@ -660,6 +665,7 @@ module.exports = {
       '20': '5rem',
       '24': '6rem',
       '32': '8rem',
+      '36': '10rem',
       '-px': '-1px',
       '-1': '-0.25rem',
       '-2': '-0.5rem',
