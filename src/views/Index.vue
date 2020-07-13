@@ -99,13 +99,10 @@
           </div>
           <div class="vx-col w-full md:w-1/3 mb-base">
             <vx-card title="Statistik Covid-19">
-              <template slot="actions">
-                <feather-icon icon="HelpCircleIcon" svgClasses="w-6 h-6 text-grey"></feather-icon>
-              </template>
 
               <!-- CHART -->
               <template slot="no-body">
-                <vue-apex-charts class="mt-6 mb-8" type=donut height=250
+                <vue-apex-charts class="mt-6 pb-8" type=donut height=250
                                  :options="sessionsByDeviceDonut.chartOptions"
                                  :series="sessionsData.series" />
               </template>
@@ -121,7 +118,7 @@
                   <p class="mb-4 text-3xl font-semibold">10.561</p>
                 </div>
                 <div class="w-1/3 border border-solid d-theme-border-grey-light border-r-0 border-b-0">
-                  <p class="mt-4">Meninggal Dunia</p>
+                  <p class="mt-4">Meninggal</p>
                   <p class="mb-4 text-3xl font-semibold">2.056</p>
                 </div>
               </div>
@@ -134,6 +131,7 @@
 </template>
 
 <script>
+  import dashboard from '../http/dashboard'
   import VueApexCharts from 'vue-apexcharts';
   import StatisticsCardLine from "../components/statistics-cards/StatisticsCardLine.vue";
   export default {
@@ -259,11 +257,14 @@
         },
         sessionsByDeviceDonut: {
           chartOptions: {
-            labels: ['Positif', 'Sembuh', 'Meninggal Dunia'],
+            labels: ['Positif', 'Sembuh', 'Meninggal'],
             dataLabels: {
               enabled: false
             },
-            legend: { show: false },
+            legend: {
+              show: true,
+              position: 'bottom'
+            },
             chart: {
               offsetY: 30,
               type: 'donut',
@@ -272,17 +273,30 @@
               }
             },
             stroke: { width: 0 },
-            colors: ['#0f4c75', '#FF9F43', '#EA5455'],
+            colors: ['#FF9F43', '#28C76F', '#EA5455'],
             fill: {
               type: 'gradient',
               gradient: {
-                gradientToColors: ['#116496', '#FFC085', '#f29292']
+                gradientToColors: ['#ffc18a', '#2be383', '#f29292']
               }
             }
           }
         },
       }
     },
+    methods: {
+      getCovid() {
+        dashboard.getCovidProvince()
+          .then((res) => {
+            console.log('res', res.data);
+          }).catch((err) => {
+            throw new Error(err);
+        })
+      }
+    },
+    created() {
+      this.getCovid();
+    }
   }
 </script>
 

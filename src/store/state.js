@@ -24,7 +24,11 @@ const userDefaults = {
   status      : "online",
   userRole    : "admin",
   username    : "admin",
-  role_id     : ''
+  role_id     : '',
+  token       : '',
+  role : {
+    level: 'public',
+  }
 }
 
 const userInfoLocalStorage = JSON.parse(localStorage.getItem("userInfo")) || {}

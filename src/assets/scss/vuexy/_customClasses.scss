@@ -572,3 +572,17 @@ ul.bordered-items {
     }
   }
 }
+
+.tr-expand {
+  td {
+    .content-tr-expand {
+      background : linear-gradient(123deg, rgba(var(--vs-primary), 1), rgba(var(--vs-primary), 0.8));
+      color: #fff;
+      justify-content: unset !important;
+      padding-left: 30px;
+    }
+    .tr-expand--close {
+      justify-content: unset !important;
+    }
+  }
+}

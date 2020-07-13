@@ -1,14 +1,14 @@
 <template>
   <div class="vx-row">
     <div class="vx-col w-full md:w-3/4 mb-base">
-      <vx-card title="Kritik & Saran">
-        <form @keypress.enter="sendCritics">
+      <vx-card title="Pengaduan">
+        <form @keypress.enter="sendComplaint">
           <div class="vx-row mb-6">
             <div class="vx-col sm:w-1/3 w-full">
-              <label for="subject">Judul</label>
+              <label for="subject">Tipe</label>
             </div>
             <div class="vx-col sm:w-2/3 w-full">
-              <vs-input id="subject" class="w-full" v-model="subject" />
+              <v-select id="subject" v-model="type" label="name" :options="types" ></v-select>
             </div>
           </div>
           <div class="vx-row mb-6">
@@ -21,7 +21,7 @@
           </div>
           <div class="vx-row">
             <div class="vx-col sm:w-2/3 w-full ml-auto">
-              <vs-button class="mr-3 mb-2" @click="sendCritics">Kirim</vs-button>
+              <vs-button class="mr-3 mb-2" @click="sendComplaint">Kirim</vs-button>
             </div>
           </div>
         </form>
@@ -31,28 +31,42 @@
 </template>
 
 <script>
-  import criticsSuggest from "../../http/criticsSuggest";
+  import complaint from "../../http/complaint";
   export default {
-    name: "CriticsSuggest",
+    name: "Complaint",
     data() {
       return {
-        subject: '',
+        types: [
+          {key: 'tamu', name: 'Tamu'},
+          {key: 'kematian', name: 'Kematian'},
+          {key: 'kehilangan', name: 'Kehilangan'}
+        ],
+        type: null,
         body: '',
       }
     },
+    computed: {
+      validate() {
+        if(this.type !== '' && this.body !== '') {
+          return true
+        } else {
+          return false
+        }
+      }
+    },
     methods: {
-      sendCritics() {
+      sendComplaint() {
         new Promise((resolve, reject) => {
           const payload = {
-            subject: this.subject,
+            type: this.type.key,
             body: this.body
           };
-          criticsSuggest.store(payload)
+          complaint.store(payload)
             .then((res) => {
               if(res.data.data) {
                 this.$vs.notify({
                   title: 'Berhasil!',
-                  text: 'Terima kasih atas kritik dan sarannya',
+                  text: 'Pengaduan Anda telah terkirim',
                   iconPack: 'feather',
                   icon: 'icon-check-circle',
                   color: 'primary'
@@ -75,7 +89,7 @@
         });
       },
       reset() {
-        this.subject = '';
+        this.type = null;
         this.body = '';
       }
     }

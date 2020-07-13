@@ -17,6 +17,8 @@ import 'material-icons/iconfont/material-icons.css' //Material Icons
 import 'vuesax/dist/vuesax.css'; // Vuesax
 Vue.use(Vuesax)
 
+// ACL
+import acl from './acl/acl'
 
 // axios
 import axios from "./axios.js"
@@ -78,5 +80,6 @@ Vue.config.productionTip = false
 new Vue({
     router,
     store,
+    acl,
     render: h => h(App)
 }).$mount('#app')

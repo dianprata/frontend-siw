@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import numeral from 'numeral'
+import moment from 'moment'
 
 Vue.filter('capitalize', function (value) {
 	if (!value) return ''
@@ -85,4 +86,9 @@ Vue.filter('k_formatter', function(num) {
 Vue.filter('num_formatter',function(num) {
 	const str = numeral(num).format('0,0');
 	return str.split(',').join('.');
+})
+
+Vue.filter('date_filter', function (value) {
+	moment.locale('id');
+	return moment(value).format('ddd, DD-MM-YYYY')
 })

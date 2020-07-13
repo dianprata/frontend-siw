@@ -35,7 +35,6 @@
 </template>
 
 <script>
-  import auth from '@/http/auth.js'
 export default {
   data() {
     return {
@@ -49,22 +48,16 @@ export default {
   },
   methods: {
     logout() {
-      new Promise((resolve, reject) => {
-        auth.logout(this.activeUserInfo.role_id)
-          .then((res) => {
-            if(res.data.data) {
-              this.$store.commit('UPDATE_USER_INFO', {role_id: ''})
-              localStorage.removeItem('userInfo');
-              this.$router.push('/').catch(() => {})
-              resolve(res)
-            } else {
-              reject('error');
-            }
-          }).catch((err) => {
-            reject(err)
-          throw new Error(err)
-        })
-      });
+      const payload = {
+        role_id: '',
+        token: '',
+        role: {
+          level: 'public'
+        }
+      };
+      this.$store.commit('UPDATE_USER_INFO', payload);
+      localStorage.removeItem('userInfo');
+      this.$router.push('/').catch(() => {})
     },
   }
 }

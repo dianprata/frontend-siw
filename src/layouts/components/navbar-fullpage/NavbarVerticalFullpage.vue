@@ -74,8 +74,11 @@ export default {
     ProfileDropDown
   },
   computed: {
+    activeUser() {
+      return this.$store.state.AppActiveUser;
+    },
     isAuthenticated() {
-      if(!localStorage.getItem('userInfo') || this.$store.state.AppActiveUser.role_id === '') {
+      if(this.activeUser.role.level === 'public' || !localStorage.getItem('userInfo') || this.activeUser.role_id === '') {
         return false
       } else {
         return true

@@ -48,7 +48,16 @@ const actions = {
 
     updateUserInfo({ commit }, payload) {
       commit('UPDATE_USER_INFO', payload)
-    }
+    },
+    updateUserRole({ dispatch }, payload) {
+      // Change client side
+      payload.aclChangeRole(payload.userRole)
+
+      // Make API call to server for changing role
+
+      // Change userInfo in localStorage and store
+      dispatch('updateUserInfo', {role: {level: payload.userRole}})
+    },
 }
 
 export default actions

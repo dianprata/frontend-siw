@@ -20,5 +20,11 @@ export default [
     name: "Kritik & Saran",
     slug: "kritik-saran",
     icon: "MessageSquareIcon"
+  },
+  {
+    url: "/pengaduan",
+    name: "Pengaduan",
+    slug: "pengaduan",
+    icon: "SendIcon"
   }
 ]

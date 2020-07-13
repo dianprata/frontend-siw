@@ -158,6 +158,9 @@ export default {
     }
   },
   computed: {
+    rule() {
+      return this.$acl.get[0];
+    },
     navMenuItems() {
       if(this.$store.state.AppActiveUser.role_id === 1) {
         return navMenuItemsAdmin

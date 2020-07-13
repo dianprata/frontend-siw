@@ -16,9 +16,15 @@ export default [
     icon: "HomeIcon",
   },
   {
-    url: "/page2",
-    name: "Page 2",
-    slug: "page2",
-    icon: "FileIcon",
+    url: "/kritik-saran-warga",
+    name: "Kritik & Saran Warga",
+    slug: "kritik-saran-warga",
+    icon: "MessageSquareIcon",
+  },
+  {
+    url: "/pengaduan-warga",
+    name: "Pengaduan Warga",
+    slug: "pengaduan-warga",
+    icon: "SendIcon",
   },
 ]
