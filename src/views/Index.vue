@@ -48,53 +48,14 @@
           <!-- CARD 9: DISPATCHED ORDERS -->
           <div class="vx-col w-full md:w-2/3 mb-base">
             <vx-card title="Pengumuman">
-              <div slot="no-body" class="mt-4">
-                <vs-table :data="dispatchedOrders" class="table-dark-inverted">
-                  <template slot="thead">
-                    <vs-th>ORDER NO.</vs-th>
-                    <vs-th>STATUS</vs-th>
-                    <vs-th>OPERATORS</vs-th>
-                    <vs-th>LOCATION</vs-th>
-                    <vs-th>DISTANCE</vs-th>
-                    <vs-th>START DATE</vs-th>
-                    <vs-th>EST DELIVERY DATE</vs-th>
-                  </template>
-
-                  <template slot-scope="{data}">
-                    <vs-tr :key="indextr" v-for="(tr, indextr) in data">
-                      <vs-td :data="data[indextr].orderNo">
-                        <span>#{{data[indextr].orderNo}}</span>
-                      </vs-td>
-                      <vs-td :data="data[indextr].status">
-                        <span class="flex items-center px-2 py-1 rounded"><div class="h-3 w-3 rounded-full mr-2" :class="'bg-' + data[indextr].statusColor"></div>{{data[indextr].status}}</span>
-                      </vs-td>
-                      <vs-td :data="data[indextr].orderNo">
-                        <ul class="users-liked user-list">
-                          <li v-for="(user, userIndex) in data[indextr].usersLiked" :key="userIndex">
-                            <vx-tooltip :text="user.name" position="bottom">
-                              <vs-avatar :src="user.img" size="30px" class="border-2 border-white border-solid -m-1"></vs-avatar>
-                            </vx-tooltip>
-                          </li>
-                        </ul>
-                      </vs-td>
-                      <vs-td :data="data[indextr].orderNo">
-                        <span>{{data[indextr].location}}</span>
-                      </vs-td>
-                      <vs-td :data="data[indextr].orderNo">
-                        <span>{{data[indextr].distance}}</span>
-                        <vs-progress :percent="data[indextr].distPercent" :color="data[indextr].statusColor"></vs-progress>
-                      </vs-td>
-                      <vs-td :data="data[indextr].orderNo">
-                        <span>{{data[indextr].startDate}}</span>
-                      </vs-td>
-                      <vs-td :data="data[indextr].orderNo">
-                        <span>{{data[indextr].estDelDate}}</span>
-                      </vs-td>
-                    </vs-tr>
-                  </template>
-                </vs-table>
+              <vs-list :key="index" v-for="(ann, index) in announcement">
+                <vs-list-header :title="ann.created_at | date_filter"></vs-list-header>
+                <vs-list-item :title="ann.title" :subtitle="ann.body"></vs-list-item>
+              </vs-list>
+              <div v-if="announcement.length === 0">
+                <p class="text-center">No Data Available</p>
               </div>
-
+              <vs-button type="flat" class="w-full" v-if="isAuthenticated" to="/pengumuman">Lebih lanjut ></vs-button>
             </vx-card>
           </div>
           <div class="vx-col w-full md:w-1/3 mb-base">
@@ -131,7 +92,7 @@
 </template>
 
 <script>
-  import dashboard from '../http/dashboard'
+  import announcement from "../http/announcement";
   import VueApexCharts from 'vue-apexcharts';
   import StatisticsCardLine from "../components/statistics-cards/StatisticsCardLine.vue";
   export default {
@@ -142,6 +103,7 @@
     },
     data() {
       return  {
+        announcement: [],
         subscribersGained: {
           series: [{
             name: 'Subscribers',
@@ -284,18 +246,28 @@
         },
       }
     },
-    methods: {
-      getCovid() {
-        dashboard.getCovidProvince()
-          .then((res) => {
-            console.log('res', res.data);
-          }).catch((err) => {
-            throw new Error(err);
-        })
+    computed: {
+      activeUser() {
+        return this.$store.state.AppActiveUser;
+      },
+      isAuthenticated() {
+        return this.$acl.check('admin') && localStorage.getItem('userInfo') && this.activeUser.role_id !== '';
       }
     },
+    methods: {
+      async getAnnouncement() {
+        const params = 'page=1&perPage=5';
+        await announcement.index(params)
+          .then((res) => {
+            const { data } = res.data;
+            this.announcement = data.record;
+          }).catch((err) => {
+            throw new Error(err);
+          })
+      },
+    },
     created() {
-      this.getCovid();
+      this.getAnnouncement();
     }
   }
 </script>

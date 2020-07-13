@@ -30,7 +30,7 @@
         <div class="header-sidebar flex items-end justify-between" slot="header">
 
           <!-- Logo -->
-          <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/home">
+          <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/">
 <!--            <logo class="w-10 mr-4 fill-current text-primary" />-->
             <vs-icon icon="strikethrough_s"
                      color="rgb(var(--vs-primary))"

@@ -27,4 +27,10 @@ export default [
     slug: "pengaduan-warga",
     icon: "SendIcon",
   },
+  {
+    url: "/pengumuman",
+    name: "Pengumuman",
+    slug: "pengumuman",
+    icon: "BellIcon",
+  },
 ]

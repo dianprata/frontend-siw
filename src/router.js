@@ -177,6 +177,20 @@ const router = new Router({
                   pageTitle: 'Pengaduan Warga',
                 }
               },
+              {
+                path: '/pengumuman',
+                name: 'pengumuman',
+                component: () => import('./views/admin/Announcement.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: 'admin',
+                  breadcrumb: [
+                    { title: 'Home', url: '/home' },
+                    { title: 'Pengumuman', active: true },
+                  ],
+                  pageTitle: 'Pengumuman',
+                }
+              },
             ],
         },
         // Redirect to 404 page, if no match found

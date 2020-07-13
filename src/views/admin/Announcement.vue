@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="sm:mt-2 sm:float-left text-right">
-      <vs-dropdown vs-trigger-click class="cursor-pointer">
+    <div class="md:mt-2 md:float-left text-right">
+      <vs-dropdown vs-trigger-click class="cursor-pointer sm:mr-3 mr-0 sm:mb-0 mb-3">
         <div class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium">
           <span class="mr-2">{{ currentPage * paginationPageSize - (paginationPageSize - 1) }} - {{ table.meta.total_record - currentPage * paginationPageSize > 0 ? currentPage * paginationPageSize : table.meta.total_record }} of {{ table.meta.total_record }}</span>
           <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
@@ -21,6 +21,8 @@
           </vs-dropdown-item>
         </vs-dropdown-menu>
       </vs-dropdown>
+
+      <vs-button @click="activePrompt = !activePrompt">Tambah Pengumuman</vs-button>
     </div>
 
     <vx-table search :table="table" :max-items="table.meta.per_page">
@@ -37,9 +39,9 @@
         {{ props.row.created_at | date_filter }}
       </template>
       <template v-slot:actions="props">
-        <vx-tooltip text="Tandai sudah terselesaikan"
+        <vx-tooltip text="Tandai untuk nonaktifkan"
                     class="text-center">
-          <feather-icon @click="markAsResolved(props.row)" icon="CheckCircleIcon"></feather-icon>
+          <feather-icon @click="markNotActive(props.row)" icon="XIcon"></feather-icon>
         </vx-tooltip>
       </template>
       <template v-slot:expand-slot="props">
@@ -53,22 +55,50 @@
         class="mt-5"
         :total="totalPages"
         v-model="currentPage" />
+
+      <vs-prompt
+          @cancel="reset"
+          @close="reset"
+          @accept="sendAnnouncement()"
+          accept-text="Kirim"
+          :is-valid="validateForm"
+          title="Tambah Pengumuman"
+          :active.sync="activePrompt">
+        <div class="vx-row mb-6">
+          <div class="vx-col sm:w-1/5 w-full">
+            <label for="subject">Judul</label>
+          </div>
+          <div class="vx-col sm:w-4/5 w-full">
+            <vs-input id="subject" class="w-full" v-model="title" />
+          </div>
+        </div>
+        <div class="vx-row mb-6">
+          <div class="vx-col sm:w-1/5 w-full">
+            <label for="body">Isi</label>
+          </div>
+          <div class="vx-col sm:w-4/5 w-full">
+            <vs-textarea id="body" class="w-full" v-model="body"></vs-textarea>
+          </div>
+        </div>
+      </vs-prompt>
   </div>
 </template>
 
 <script>
-  import complaint from "../../http/complaint";
+  import announcement from "../../http/announcement";
   export default {
-    name: "ComplaintAdmin",
+    name: "Announcement",
     data() {
       return {
+        title: '',
+        body: '',
+        activePrompt: false,
         table: {
           data: [],
           columns: [
             { key: 'no', label: 'No' },
-            { key: 'type', label: 'Tipe' },
-            { key: 'residentName', sortKey: 'resident.name', label: 'Pengirim' },
-            { key: 'created_at', label: 'Tanggal Pengaduan' },
+            { key: 'title', label: 'Judul' },
+            { key: 'created_at', label: 'Tanggal Pengumuman' },
             { key: 'actions' }
           ],
           meta: {},
@@ -93,14 +123,17 @@
         },
         set(val) {
           this.table.page = val;
-          this.fetchComplaint();
+          this.fetchAnnouncement();
         }
+      },
+      validateForm() {
+        return this.title !== '' && this.body !== '';
       }
     },
     methods: {
-      fetchComplaint() {
+      fetchAnnouncement() {
         const params = `page=${this.table.page}&perPage=${this.table.perPage}`;
-        complaint.index(params)
+        announcement.index(params)
           .then((res) => {
             const { data } = res.data;
             this.table.data = data.record;
@@ -109,9 +142,42 @@
           throw new Error(err);
         });
       },
-      markAsResolved(data) {
-        if(data.is_resolved === 0) {
-          complaint.markAsResolved(data.id)
+      sendAnnouncement() {
+        new Promise((resolve, reject) => {
+          const payload = {
+            title: this.title,
+            body: this.body
+          };
+          announcement.store(payload)
+            .then((res) => {
+              if(res.data.data) {
+                this.$vs.notify({
+                  title: 'Berhasil!',
+                  text: 'Pemberitahuan Anda telah diterbitkan',
+                  iconPack: 'feather',
+                  icon: 'icon-check-circle',
+                  color: 'primary'
+                });
+                this.reset();
+                resolve(res);
+              } else {
+                reject('Gagal!')
+              }
+            }).catch((err) => {
+            this.$vs.notify({
+              title: 'Gagal!',
+              text: 'Maaf ada kesalahan, coba lagi',
+              iconPack: 'feather',
+              icon: 'icon-alert-circle',
+              color: 'danger'
+            });
+            reject(err);
+          })
+        });
+      },
+      markNotActive(data) {
+        if(data.is_active === 1) {
+          announcement.markNotActive(data.id)
             .then(() => {
               this.$vs.notify({
                 title: 'Berhasil!',
@@ -120,7 +186,7 @@
                 icon: 'icon-check-circle',
                 color: 'primary'
               });
-              this.fetchComplaint();
+              this.fetchAnnouncement();
             }).catch((err) => {
             throw new Error(err);
           })
@@ -128,11 +194,15 @@
       },
       handlePerPage(perPage) {
         this.table.perPage = perPage;
-        this.fetchComplaint();
+        this.fetchAnnouncement();
       },
+      reset() {
+        this.title = '';
+        this.body = '';
+      }
     },
     created() {
-      this.fetchComplaint();
+      this.fetchAnnouncement();
     }
   }
 </script>

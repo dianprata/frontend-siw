@@ -78,11 +78,7 @@ export default {
       return this.$store.state.AppActiveUser;
     },
     isAuthenticated() {
-      if(this.activeUser.role.level === 'public' || !localStorage.getItem('userInfo') || this.activeUser.role_id === '') {
-        return false
-      } else {
-        return true
-      }
+      return this.activeUser.role.level !== 'public' && localStorage.getItem('userInfo') && this.activeUser.role_id !== '';
     },
     navbarColorLocal() {
       return this.$store.state.theme === "dark" && this.navbarColor === "#fff" ? "#10163a" : this.navbarColor

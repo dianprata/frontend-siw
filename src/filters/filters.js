@@ -90,5 +90,5 @@ Vue.filter('num_formatter',function(num) {
 
 Vue.filter('date_filter', function (value) {
 	moment.locale('id');
-	return moment(value).format('ddd, DD-MM-YYYY')
+	return moment(value).format('ddd, DD-MM-YYYY hh:mm')
 })
