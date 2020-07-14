@@ -25,6 +25,7 @@
           </vs-navbar-title>
           <vs-spacer />
           <search-bar class="md:hidden" />
+          <vs-button type="flat" class="md:hidden" @click="darkMode = !darkMode" :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
           <vs-button type="flat" to="/login" class="md:hidden px-4" v-if="!isAuthenticated">Login</vs-button>
           <profile-drop-down v-else class="md:hidden"/>
         </div>
@@ -48,7 +49,7 @@
         <vs-spacer />
 
         <search-bar class="hidden md:flex" />
-
+        <vs-button type="flat" class="hidden md:flex" @click="darkMode = !darkMode" :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
         <vs-button type="flat" to="/login" class="hidden md:flex" v-if="!isAuthenticated">Login</vs-button>
         <profile-drop-down v-else class="hidden md:flex"/>
       </vs-navbar>
@@ -74,6 +75,10 @@ export default {
     ProfileDropDown
   },
   computed: {
+    darkMode: {
+      get() { return this.$store.state.theme !== 'light' },
+      set(val) { this.$store.dispatch('updateTheme', val ? 'dark' : 'light') }
+    },
     activeUser() {
       return this.$store.state.AppActiveUser;
     },

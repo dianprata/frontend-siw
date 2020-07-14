@@ -22,6 +22,12 @@
 
           <vs-divider class="m-1" />
 
+          <li class="flex py-2 px-4">
+            Dark Mode <vs-switch v-model="darkMode" class="ml-3" vs-icon-off="nights_stay" vs-icon-on="wb_sunny"/>
+          </li>
+
+          <vs-divider class="m-1" />
+
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
             @click="logout">
@@ -36,14 +42,13 @@
 
 <script>
 export default {
-  data() {
-    return {
-
-    }
-  },
   computed: {
     activeUserInfo() {
       return this.$store.state.AppActiveUser
+    },
+    darkMode: {
+      get() { return this.$store.state.theme !== 'light' },
+      set(val) { this.$store.dispatch('updateTheme', val ? 'dark' : 'light') }
     }
   },
   methods: {
