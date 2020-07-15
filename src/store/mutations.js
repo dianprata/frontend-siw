@@ -6,7 +6,7 @@
   Author: Pixinvent
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
-
+import axios from "../axios";
 
 const mutations = {
 
@@ -114,6 +114,8 @@ const mutations = {
     }
     // Store data in localStorage
     localStorage.setItem("userInfo", JSON.stringify(userInfo))
+
+    axios.defaults.headers.common['Authorization'] = `${userInfo ? userInfo.token : ''}`;
   },
 }
 

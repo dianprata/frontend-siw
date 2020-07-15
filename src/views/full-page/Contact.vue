@@ -1,7 +1,7 @@
 <template>
   <div class="pt-32 bg-img h-screen">
     <div class="container mx-auto lg:px-6 px-5">
-      <h1 class="text-center my-10">Hubungi Kami</h1>
+      <h1 class="text-center my-10 d-theme-text-inverse">Hubungi Kami</h1>
       <div class="flex w-full vx-row no-gutter items-center justify-center">
         <div class="vx-col sm:w-1/2 md:w-1/2 lg:w-3/5 xl:w-4/6 sm:m-0 m-4">
           <vx-card>
@@ -9,7 +9,7 @@
 
               <div class="vx-row no-gutter justify-center">
 
-                <div class="vx-col sm:w-full md:w-full lg:w-2/3 d-theme-dark-bg">
+                <div class="vx-col sm:w-full md:w-full lg:w-2/3 d-theme-dark-bg border-right">
                   <div class="p-8 login-tabs-container">
 
                     <div class="vx-card__title mb-8">
@@ -41,7 +41,7 @@
                   </div>
                 </div>
 
-                <div class="vx-col hidden lg:block lg:w-1/3">
+                <div class="vx-col hidden lg:block lg:w-1/3 d-theme-dark-bg">
                   <div class="vx-card__title mb-6 p-8">
                     <h4 class="mb-4">Kontak</h4>
                     <h6>Jl. Rengganis blok 3B</h6>

@@ -469,6 +469,19 @@
       }
     }
   }
+
+  .vs-textarea-primary {
+    .vs-textarea {
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .vs-navbar--btn-responsive {
+    .btn-responsive-line {
+      background: $theme-dark-heading-color;
+    }
+  }
 }
 
 
@@ -585,4 +598,8 @@ ul.bordered-items {
       justify-content: unset !important;
     }
   }
+}
+
+.border-right {
+  border-right: 1px solid rgba(var(--vs-primary),1);
 }

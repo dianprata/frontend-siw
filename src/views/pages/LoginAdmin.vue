@@ -97,11 +97,11 @@ export default{
         auth.login(payload)
           .then((res) => {
             if(res.data.data) {
-              this.$vs.loading.close();
               localStorage.setItem('userInfo', JSON.stringify(res.data.data));
               this.$store.dispatch('updateUserRole', {aclChangeRole: this.$acl.change, userRole: res.data.data.role.level})
               this.$store.commit('UPDATE_USER_INFO', res.data.data);
               this.$router.push('/home');
+              this.$vs.loading.close();
               resolve(res);
             } else {
               this.$vs.loading.close();

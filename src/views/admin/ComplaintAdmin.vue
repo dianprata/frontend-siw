@@ -103,8 +103,10 @@
         complaint.index(params)
           .then((res) => {
             const { data } = res.data;
-            this.table.data = data.record;
-            this.table.meta = data.meta_pagination;
+            if(data) {
+              this.table.data = data.record;
+              this.table.meta = data.meta_pagination;
+            }
           }).catch((err) => {
           throw new Error(err);
         });

@@ -25,7 +25,9 @@
 
         <search-bar />
 
-        <notification-drop-down />
+<!--        <notification-drop-down />-->
+
+        <vs-button type="flat" class="sm:mr-3" @click="darkMode = !darkMode" :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
 
         <profile-drop-down />
 
@@ -56,6 +58,10 @@ export default {
     ProfileDropDown,
   },
   computed: {
+    darkMode: {
+      get() { return this.$store.state.theme !== 'light' },
+      set(val) { this.$store.dispatch('updateTheme', val ? 'dark' : 'light') }
+    },
     navbarColorLocal() {
       return this.$store.state.theme === "dark" && this.navbarColor === "#fff" ? "#10163a" : this.navbarColor
     },

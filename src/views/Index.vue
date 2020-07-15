@@ -47,7 +47,7 @@
         <div class="vx-row">
           <!-- CARD 9: DISPATCHED ORDERS -->
           <div class="vx-col w-full md:w-2/3 mb-base">
-            <vx-card title="Pengumuman">
+            <vx-card title="Pengumuman" refresh-content-action collapse-action @refresh="getAnnouncement">
               <vs-list :key="index" v-for="(ann, index) in announcement">
                 <vs-list-header :title="ann.created_at | date_filter"></vs-list-header>
                 <vs-list-item :title="ann.title" :subtitle="ann.body"></vs-list-item>
@@ -255,12 +255,15 @@
       }
     },
     methods: {
-      async getAnnouncement() {
+      async getAnnouncement(card) {
         const params = 'page=1&perPage=5';
         await announcement.index(params)
           .then((res) => {
             const { data } = res.data;
             this.announcement = data.record;
+            if(card !== undefined) {
+              card.removeRefreshAnimation();
+            }
           }).catch((err) => {
             throw new Error(err);
           })

@@ -211,20 +211,10 @@ router.afterEach(() => {
 
 router.beforeEach((to, from, next) => {
   // If auth required, check login. If login fails redirect to login page
-  const roleLevel = state.AppActiveUser.role.level;
   const userInfo = localStorage.getItem('userInfo');
   const roleId = state.AppActiveUser.role_id === '';
   if(to.matched.some((record) => record.meta.authRequired)) {
     if(!userInfo || roleId) {
-      // if (to.matched.some((record) => record.meta.rule === 'admin')) {
-      //   if (roleLevel !== 'admin') {
-      //     router.push({path: '/'})
-      //   }
-      // } else if (to.matched.some((record) => record.meta.rule === 'resident')) {
-      //   if (roleLevel !== 'resident') {
-      //     router.push({path: '/home'})
-      //   }
-      // }
       router.push({path: '/login'})
     }
   }
