@@ -16,6 +16,7 @@ import VxBreadcrumb  from './layouts/components/VxBreadcrumb.vue'
 import FeatherIcon  from './components/FeatherIcon.vue'
 import VxInputGroup  from './components/vx-input-group/VxInputGroup.vue'
 import VxTable from './components/vx-table/VxTable.vue'
+import Datepicker from "vuejs-datepicker";
 
 Vue.component(VxTooltip.name, VxTooltip)
 Vue.component(VxCard.name, VxCard)
@@ -24,6 +25,7 @@ Vue.component(VxBreadcrumb.name, VxBreadcrumb)
 Vue.component(FeatherIcon.name, FeatherIcon)
 Vue.component(VxInputGroup.name, VxInputGroup)
 Vue.component(VxTable.name, VxTable)
+Vue.component('datepicker', Datepicker);
 
 
 // v-select component

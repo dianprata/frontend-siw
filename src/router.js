@@ -41,14 +41,6 @@ const router = new Router({
             }
           },
           {
-            path: '/berita',
-            name: 'news',
-            component: () => import('./views/full-page/News.vue'),
-            meta: {
-              rule: 'public'
-            }
-          },
-          {
             path: '/tentang',
             name: 'about',
             component: () => import('./views/full-page/About.vue'),
@@ -191,6 +183,36 @@ const router = new Router({
                   pageTitle: 'Pengumuman',
                 }
               },
+              {
+                path: '/penduduk',
+                name: 'penduduk',
+                component: () => import('./views/admin/resident/Index.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: 'admin',
+                  breadcrumb: [
+                    { title: 'Home', url: '/home' },
+                    { title: 'Penduduk', active: true },
+                  ],
+                  pageTitle: 'Penduduk'
+                }
+              },
+              {
+                path: '/penduduk/tambah',
+                name: 'tambah-penduduk',
+                component: () => import('./views/admin/resident/Add.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: 'admin',
+                  breadcrumb: [
+                    { title: 'Home', url: '/home' },
+                    { title: 'Penduduk', url: '/penduduk' },
+                    { title: 'Tambah Penduduk', active: true },
+                  ],
+                  pageTitle: 'Tambah Penduduk',
+                  parent: 'penduduk'
+                }
+              }
             ],
         },
         // Redirect to 404 page, if no match found

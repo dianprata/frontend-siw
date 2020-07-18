@@ -16,6 +16,12 @@ export default [
     icon: "HomeIcon",
   },
   {
+    url: "/penduduk",
+    name: "Penduduk",
+    slug: "penduduk",
+    icon: "UsersIcon"
+  },
+  {
     url: "/kritik-saran-warga",
     name: "Kritik & Saran Warga",
     slug: "kritik-saran-warga",

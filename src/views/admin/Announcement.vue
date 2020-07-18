@@ -56,31 +56,31 @@
         :total="totalPages"
         v-model="currentPage" />
 
-      <vs-prompt
-          @cancel="reset"
-          @close="reset"
-          @accept="sendAnnouncement()"
-          accept-text="Kirim"
-          :is-valid="validateForm"
-          title="Tambah Pengumuman"
-          :active.sync="activePrompt">
-        <div class="vx-row mb-6">
-          <div class="vx-col sm:w-1/5 w-full">
-            <label for="subject">Judul</label>
-          </div>
-          <div class="vx-col sm:w-4/5 w-full">
-            <vs-input id="subject" class="w-full" v-model="title" />
-          </div>
+    <vs-prompt
+        @cancel="reset"
+        @close="reset"
+        @accept="sendAnnouncement()"
+        accept-text="Kirim"
+        :is-valid="validateForm"
+        title="Tambah Pengumuman"
+        :active.sync="activePrompt">
+      <div class="vx-row mb-6">
+        <div class="vx-col sm:w-1/5 w-full">
+          <label for="subject">Judul</label>
         </div>
-        <div class="vx-row mb-6">
-          <div class="vx-col sm:w-1/5 w-full">
-            <label for="body">Isi</label>
-          </div>
-          <div class="vx-col sm:w-4/5 w-full">
-            <vs-textarea id="body" class="w-full" v-model="body"></vs-textarea>
-          </div>
+        <div class="vx-col sm:w-4/5 w-full">
+          <vs-input id="subject" class="w-full" v-model="title" />
         </div>
-      </vs-prompt>
+      </div>
+      <div class="vx-row mb-6">
+        <div class="vx-col sm:w-1/5 w-full">
+          <label for="body">Isi</label>
+        </div>
+        <div class="vx-col sm:w-4/5 w-full">
+          <vs-textarea id="body" class="w-full" v-model="body"></vs-textarea>
+        </div>
+      </div>
+    </vs-prompt>
   </div>
 </template>
 

@@ -25,7 +25,10 @@
           </vs-navbar-title>
           <vs-spacer />
           <search-bar class="md:hidden" />
-          <vs-button type="flat" class="md:hidden" :class="{ 'sm:mr-3' : isAuthenticated }" @click="darkMode = !darkMode" :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
+          <vs-button type="flat" class="md:hidden"
+                     :class="{ 'sm:mr-3' : isAuthenticated }"
+                     @click="darkMode = !darkMode"
+                     :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
           <vs-button type="flat" to="/login" class="md:hidden px-4" v-if="!isAuthenticated">Login</vs-button>
           <profile-drop-down v-else class="md:hidden"/>
         </div>
@@ -37,9 +40,6 @@
           <router-link to="/">Beranda</router-link>
         </vs-navbar-item>
         <vs-navbar-item>
-          <router-link to="/berita">Berita</router-link>
-        </vs-navbar-item>
-        <vs-navbar-item>
           <router-link to="/tentang">Tentang</router-link>
         </vs-navbar-item>
         <vs-navbar-item>
@@ -49,7 +49,10 @@
         <vs-spacer />
 
         <search-bar class="hidden md:flex" />
-        <vs-button type="flat" class="hidden md:flex" :class="{ 'sm:mr-3' : isAuthenticated }" @click="darkMode = !darkMode" :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
+        <vs-button type="flat" class="hidden md:flex"
+                   :class="{ 'sm:mr-3' : isAuthenticated }"
+                   @click="darkMode = !darkMode"
+                   :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
         <vs-button type="flat" to="/login" class="hidden md:flex" v-if="!isAuthenticated">Login</vs-button>
         <profile-drop-down v-else class="hidden md:flex"/>
       </vs-navbar>

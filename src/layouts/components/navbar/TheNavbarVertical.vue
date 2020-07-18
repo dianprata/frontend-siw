@@ -27,7 +27,9 @@
 
 <!--        <notification-drop-down />-->
 
-        <vs-button type="flat" class="sm:mr-3" @click="darkMode = !darkMode" :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
+        <vs-button type="flat" class="sm:mr-3"
+                   @click="darkMode = !darkMode"
+                   :icon="darkMode ? 'wb_sunny' : 'nights_stay'" />
 
         <profile-drop-down />
 
