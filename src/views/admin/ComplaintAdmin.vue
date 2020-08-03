@@ -36,7 +36,7 @@
       <template v-slot:created_at="props">
         {{ props.row.created_at | date_filter }}
       </template>
-      <template v-slot:actions="props">
+      <template v-slot:aksi="props">
         <vx-tooltip text="Tandai sudah terselesaikan"
                     class="text-center">
           <feather-icon @click="markAsResolved(props.row)" icon="CheckCircleIcon"></feather-icon>
@@ -69,7 +69,7 @@
             { key: 'type', label: 'Tipe' },
             { key: 'residentName', sortKey: 'resident.name', label: 'Pengirim' },
             { key: 'created_at', label: 'Tanggal Pengaduan' },
-            { key: 'actions' }
+            { key: 'aksi' }
           ],
           meta: {},
           page: 1,

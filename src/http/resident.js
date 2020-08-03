@@ -2,15 +2,15 @@ import axios from "./axios";
 
 export default {
   index(params) {
-    return axios.get(`/api/resident?${params}`);
+    return axios.get(`/api/head-family?${params}`);
+  },
+  show(id) {
+    return axios.get(`/api/head-family/${id}`);
   },
   store(payload) {
-    return axios.post('/api/resident/store', payload);
+    return axios.post('/api/head-family/store', payload);
   },
-  edit(id,payload) {
-    return axios.put(`/api/resident/${id}`, payload);
-  },
-  delete(id) {
-    return axios.delete(`/api/resident/${id}`);
+  edit(payload) {
+    return axios.put('/api/head-family/update', payload);
   }
 }

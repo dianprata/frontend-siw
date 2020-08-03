@@ -91,7 +91,7 @@
                   <vs-button :class="{'mr-4': index !== 0}" color="success"
                              v-if="tabIndex === 1" @click="addResident" icon="add" />
                   <vs-button color="danger" v-if="tabIndex === 1 && index !== 0"
-                             @click="removeFormResident(index)" icon="remove" />
+                             @click="removeResident(index)" icon="remove" />
                 </div>
               </div>
               <div class="vx-col md:w-1/2 w-full">
@@ -162,10 +162,20 @@
       </vs-tabs>
       <div class="action-button">
         <vs-button class="mr-4" :disabled="!validKK" v-if="tabIndex === 0" @click="tabIndex+=1">Lanjut</vs-button>
-        <vs-button class="mr-4" :disabled="!validKK" v-else @click="submit">Submit</vs-button>
-        <vs-button color="danger" type="border" @click="reset">Reset</vs-button>
+        <vs-button class="mr-4" :disabled="!validKK" v-else @click="submit">Perbarui</vs-button>
+        <vs-button color="danger" type="border" @click="cancel">Cancel</vs-button>
       </div>
     </vx-card>
+    <vs-prompt
+        @accept="removeFormResident"
+        title="Hapus Penduduk"
+        accept-text="Ya"
+        cancel-text="Tidak"
+        :active.sync="activePrompt">
+      <div>
+        Apa Anda yakin untuk menghapus penduduk ini ?
+      </div>
+    </vs-prompt>
   </div>
 </template>
 
@@ -175,7 +185,7 @@
   import moment from 'moment'
 
   export default {
-    name: "Add",
+    name: "Edit",
     data: () => ({
       form: {
         nik_id: '',
@@ -244,6 +254,8 @@
       ],
       languages: lang,
       tabIndex: 0,
+      activePrompt: false,
+      index: ''
     }),
     watch: {
       'payload.head_family.address'() {
@@ -267,22 +279,36 @@
       }
     },
     methods: {
+      fetchResident() {
+        this.$vs.loading();
+        resident.show(this.$route.params.id)
+          .then((res) => {
+            this.$vs.loading.close();
+            if(res.data.data) {
+              this.payload = res.data.data;
+            }
+          }).catch((err) => {
+            this.$vs.loading.close();
+            throw new Error(err);
+        })
+      },
       submit() {
         this.$vs.loading();
         this.payload.resident.filter((date) => date.birth_date = moment(date.birth_date).format('YYYY-MM-DD'));
-        resident.store(this.payload)
+        resident.edit(this.payload)
           .then((res) => {
             this.$vs.loading.close();
             if(res.data.data) {
               this.$vs.notify({
                 title: 'Berhasil',
-                text: 'Tambah Penduduk Berhasil !',
+                text: 'Edit Penduduk Berhasil !',
                 color: 'success',
                 time: 1500
               });
-              this.reset();
+              this.$router.push('/penduduk');
             }
           }).catch((err) => {
+            this.$vs.loading.close();
             throw new Error(err)
         })
       },
@@ -290,26 +316,24 @@
         this.payload.resident.push(this.form);
         this.fillAddress();
       },
-      removeFormResident(index) {
-        this.payload.resident.splice(index, 1);
+      removeFormResident() {
+        this.payload.resident.splice(this.index, 1)
+      },
+      removeResident(index) {
+        this.index = index;
+        this.activePrompt = !this.activePrompt;
       },
       fillAddress() {
         this.payload.resident.map((data,index) => {
           this.payload.resident[index].address = this.payload.head_family.address
         });
       },
-      reset() {
-        this.payload.resident = [];
-        this.payload.resident.push(this.form);
-        this.payload.head_family.head_family_nik = '';
-        this.payload.head_family.name = '';
-        this.payload.head_family.address = '';
-        this.payload.head_family.postal_code = '';
-        this.payload.head_family.kelurahan = '';
-        this.payload.head_family.kecamatan = '';
-        this.payload.head_family.city = '';
-        this.payload.head_family.province = '';
+      cancel() {
+        this.$router.push('/penduduk');
       }
+    },
+    created() {
+      this.fetchResident();
     }
   }
 </script>

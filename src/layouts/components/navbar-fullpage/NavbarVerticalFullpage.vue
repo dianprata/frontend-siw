@@ -39,8 +39,8 @@
         <vs-navbar-item>
           <router-link to="/">Beranda</router-link>
         </vs-navbar-item>
-        <vs-navbar-item>
-          <router-link to="/tentang">Tentang</router-link>
+        <vs-navbar-item v-if="isAuthenticated">
+          <router-link to="/home">Home</router-link>
         </vs-navbar-item>
         <vs-navbar-item>
           <router-link to="/kontak">Kontak</router-link>

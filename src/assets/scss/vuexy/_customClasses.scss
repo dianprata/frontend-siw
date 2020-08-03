@@ -614,3 +614,10 @@ ul.bordered-items {
     }
   }
 }
+
+.con-vs-tabs {
+  overflow: visible !important;
+  .con-slot-tabs {
+    overflow: visible !important;
+  }
+}

@@ -33,7 +33,7 @@
       <template v-slot:created_at="props">
         {{ props.row.created_at | date_filter }}
       </template>
-      <template v-slot:actions="props">
+      <template v-slot:aksi="props">
         <vx-tooltip text="Tandai sudah dibaca"
                     class="text-center">
           <feather-icon @click="markAsRead(props.row)" icon="MailIcon"></feather-icon>
@@ -66,7 +66,7 @@
             { key: 'residentName', sortKey: 'resident.name', label: 'Pengirim' },
             { key: 'subject', label: 'Judul' },
             { key: 'created_at', label: 'Tanggal Kritik Saran' },
-            { key: 'actions' }
+            { key: 'aksi' }
           ],
           meta: {},
           page: 1,

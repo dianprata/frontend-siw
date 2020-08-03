@@ -41,14 +41,6 @@ const router = new Router({
             }
           },
           {
-            path: '/tentang',
-            name: 'about',
-            component: () => import('./views/full-page/About.vue'),
-            meta: {
-              rule: 'public'
-            }
-          },
-          {
             path: '/kontak',
             name: 'contact',
             component: () => import('./views/full-page/Contact.vue'),
@@ -210,6 +202,22 @@ const router = new Router({
                     { title: 'Tambah Penduduk', active: true },
                   ],
                   pageTitle: 'Tambah Penduduk',
+                  parent: 'penduduk'
+                }
+              },
+              {
+                path: '/penduduk/edit/:id',
+                name: 'edit-penduduk',
+                component: () => import('./views/admin/resident/Edit.vue'),
+                meta: {
+                  authRequired: true,
+                  rule: 'admin',
+                  breadcrumb: [
+                    { title: 'Home', url: '/home' },
+                    { title: 'Penduduk', url: '/penduduk' },
+                    { title: 'Edit Penduduk', active: true },
+                  ],
+                  pageTitle: 'Edit Penduduk',
                   parent: 'penduduk'
                 }
               }

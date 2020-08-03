@@ -38,7 +38,7 @@
       <template v-slot:created_at="props">
         {{ props.row.created_at | date_filter }}
       </template>
-      <template v-slot:actions="props">
+      <template v-slot:aksi="props">
         <vx-tooltip text="Tandai untuk nonaktifkan"
                     class="text-center">
           <feather-icon @click="markNotActive(props.row)" icon="XIcon"></feather-icon>
@@ -99,7 +99,7 @@
             { key: 'no', label: 'No' },
             { key: 'title', label: 'Judul' },
             { key: 'created_at', label: 'Tanggal Pengumuman' },
-            { key: 'actions' }
+            { key: 'aksi' }
           ],
           meta: {},
           page: 1,
@@ -158,6 +158,7 @@
                   icon: 'icon-check-circle',
                   color: 'primary'
                 });
+                this.fetchAnnouncement();
                 this.reset();
                 resolve(res);
               } else {

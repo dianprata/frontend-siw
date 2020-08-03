@@ -26,8 +26,62 @@
     </div>
 
     <vx-table search :table="table" :max-items="table.meta.per_page">
-      <template v-slot:no="props">
+      <template #no="props">
         {{ props.index }}
+      </template>
+      <template #head_family_nik="props">
+        {{ props.row.head_family.head_family_nik }}
+      </template>
+      <template #name="props">
+        {{ props.row.head_family.name }}
+      </template>
+      <template #address="props">
+        {{ props.row.head_family.address }}
+      </template>
+      <template #action="props">
+        <vx-tooltip text="Edit Penduduk" class="text-center">
+          <feather-icon @click="editResident(props.row)" icon="EditIcon"></feather-icon>
+        </vx-tooltip>
+      </template>
+
+      <template #expand-slot="props">
+        <vs-table :data="props.row.resident" class="text-dark">
+          <template slot="thead">
+            <vs-th>No</vs-th>
+            <vs-th>NIK</vs-th>
+            <vs-th>Nama Lengkap</vs-th>
+            <vs-th>Jenis Kelamin</vs-th>
+            <vs-th>Tempat Lahir</vs-th>
+            <vs-th>Tanggal Lahir</vs-th>
+            <vs-th>Pekerjaan</vs-th>
+          </template>
+
+          <template slot-scope="{data}">
+            <vs-tr :key="indextr" v-for="(tr, indextr) in data" >
+              <vs-td>
+                {{ indextr+1 }}
+              </vs-td>
+              <vs-td :data="tr.nik_id">
+                {{tr.nik_id}}
+              </vs-td>
+              <vs-td :data="tr.name">
+                {{tr.name}}
+              </vs-td>
+              <vs-td :data="tr.gender">
+                {{tr.gender}}
+              </vs-td>
+              <vs-td :data="tr.birth_place">
+                {{tr.birth_place}}
+              </vs-td>
+              <vs-td :data="tr.birth_date">
+                {{tr.birth_date}}
+              </vs-td>
+              <vs-td :data="tr.occupation">
+                {{tr.occupation}}
+              </vs-td>
+            </vs-tr>
+          </template>
+        </vs-table>
       </template>
     </vx-table>
     <vs-pagination
@@ -38,6 +92,7 @@
 </template>
 
 <script>
+  import resident from "@/http/resident";
   export default {
     name: "Residents",
     data: () => ({
@@ -45,18 +100,15 @@
         data: [],
         columns: [
           { key: 'no', label: 'No' },
-          { key: 'nik', label: 'NIK' },
-          { key: 'name', label: 'Name Lengkap' },
-          { key: 'gender', label: 'Jenis Kelamin' },
-          { key: 'place_of_birth', label: 'Tempat Lahir' },
-          { key: 'date_of_birth', label: 'Tanggal Lahir' },
-          { key: 'religion', label: 'Agama' },
-          { key: 'actions' }
+          { key: 'head_family_nik', label: 'NO KK' },
+          { key: 'name', label: 'Name Kepala Keluarga' },
+          { key: 'address', label: 'Alamat' },
+          { key: 'action', label: 'Aksi' }
         ],
         meta: {},
         page: 1,
         perPage: 10
-      }
+      },
     }),
     computed: {
       paginationPageSize() {
@@ -80,12 +132,23 @@
     },
     methods: {
       fetchResidents() {
-
+        const params = `page=${this.table.page}&perPage=${this.table.perPage}`;
+        resident.index(params)
+          .then((res) => {
+            const { data } = res.data;
+            this.table.data = data.record;
+            this.table.meta = data.meta_pagination;
+          }).catch((err) => {
+          throw new Error(err);
+        });
       },
       handlePerPage(perPage) {
         this.table.perPage = perPage;
         this.fetchResidents();
       },
+      editResident(data) {
+        this.$router.push(`/penduduk/edit/${data.head_family.id}`);
+      }
     },
     created() {
       this.fetchResidents();
