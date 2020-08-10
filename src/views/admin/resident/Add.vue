@@ -97,10 +97,10 @@
               <div class="vx-col md:w-1/2 w-full">
                 <div class="vx-row">
                   <div class="vx-col w-full mb-4">
-                    <vs-input label="Nomor Induk Kependudukan (NO NIK)" name="Nomor Induk Kependudukan (NO NIK)"
+                    <vs-input label="Nomor Induk Kependudukan (NO NIK)" :name="`Nomor Induk Kependudukan (NO NIK) ${index+1}`"
                               v-validate="'required|digits:16'"
-                              :danger="!!errors.first('Nomor Induk Kependudukan (NO NIK)')"
-                              :danger-text="errors.first('Nomor Induk Kependudukan (NO NIK)')"
+                              :danger="!!errors.first(`Nomor Induk Kependudukan (NO NIK) ${index+1}`)"
+                              :danger-text="errors.first(`Nomor Induk Kependudukan (NO NIK) ${index+1}`)"
                               val-icon-danger="clear"
                               class="w-full" v-model="payload.resident[index].nik_id"/>
                   </div>
@@ -236,10 +236,12 @@
       ],
       jobs: [
         'Tidak Bekerja',
+        'Wiraswasta',
         'Karyawan Swasta',
         'PNS',
         'Guru',
         'Ibu Rumah Tangga',
+        'Pelajar/Mahasiswa',
         'Lain-lain',
       ],
       languages: lang,
@@ -287,7 +289,17 @@
         })
       },
       addResident() {
-        this.payload.resident.push(this.form);
+        const form = {
+          nik_id: '',
+          name: '',
+          gender: '',
+          religion: '',
+          address: '',
+          birth_place: '',
+          birth_date: '',
+          occupation: ''
+        };
+        this.payload.resident.push(form);
         this.fillAddress();
       },
       removeFormResident(index) {
@@ -298,7 +310,18 @@
           this.payload.resident[index].address = this.payload.head_family.address
         });
       },
+      resetForm() {
+        this.form.nik_id = '';
+        this.form.name = '';
+        this.form.gender = '';
+        this.form.religion = '';
+        this.form.address = '';
+        this.form.birth_place = '';
+        this.form.birth_date = '';
+        this.form.occupation = '';
+      },
       reset() {
+        this.resetForm();
         this.payload.resident = [];
         this.payload.resident.push(this.form);
         this.payload.head_family.head_family_nik = '';
@@ -309,6 +332,7 @@
         this.payload.head_family.kecamatan = '';
         this.payload.head_family.city = '';
         this.payload.head_family.province = '';
+        this.tabIndex = 0;
       }
     }
   }

@@ -1,5 +1,6 @@
 <template>
-	<div class="vx-row">
+	<div>
+		<div class="vx-row">
 		<div class="vx-col w-full sm:w-1/3 mb-base">
 			<statistics-card-line
 					v-if="statistics"
@@ -30,9 +31,25 @@
 					color="danger" />
 		</div>
 	</div>
+		<div class="vx-row">
+			<!-- CARD 9: DISPATCHED ORDERS -->
+			<div class="vx-col w-full mb-base">
+				<vx-card title="Pengumuman" refresh-content-action collapse-action @refresh="getAnnouncement">
+					<vs-list :key="index" v-for="(ann, index) in announcement">
+						<vs-list-header :title="ann.created_at | date_filter"></vs-list-header>
+						<vs-list-item :title="ann.title" :subtitle="ann.body"></vs-list-item>
+					</vs-list>
+					<div v-if="announcement.length === 0">
+						<p class="text-center">No Data Available</p>
+					</div>
+				</vx-card>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
+	import announcement from "../http/announcement";
 	import dashboard from "../http/dashboard";
 	import StatisticsCardLine from "../components/statistics-cards/StatisticsCardLine.vue";
 	export default {
@@ -42,6 +59,7 @@
 		},
 		data: () => ({
 			statistics: {},
+			announcement: [],
 		}),
 		computed: {
 			allResidents() {
@@ -57,9 +75,23 @@
 							throw new Error(err);
 						})
 			},
+			async getAnnouncement(card) {
+				const params = 'page=1&perPage=5';
+				await announcement.index(params)
+						.then((res) => {
+							const { data } = res.data;
+							this.announcement = data.record;
+							if(card !== undefined) {
+								card.removeRefreshAnimation();
+							}
+						}).catch((err) => {
+							throw new Error(err);
+						})
+			},
 		},
 		created() {
 			this.getStatistics();
+			this.getAnnouncement();
 		}
 	}
 </script>

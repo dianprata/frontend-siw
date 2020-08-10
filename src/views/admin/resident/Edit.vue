@@ -246,10 +246,12 @@
       ],
       jobs: [
         'Tidak Bekerja',
+        'Wiraswasta',
         'Karyawan Swasta',
         'PNS',
         'Guru',
         'Ibu Rumah Tangga',
+        'Pelajar/Mahasiswa',
         'Lain-lain',
       ],
       languages: lang,
