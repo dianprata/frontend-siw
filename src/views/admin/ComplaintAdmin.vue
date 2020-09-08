@@ -38,7 +38,7 @@
       </template>
       <template v-slot:aksi="props">
         <vx-tooltip text="Tandai sudah terselesaikan"
-                    class="text-center">
+                    class="text-center" v-if="props.row.is_resolved === 0">
           <feather-icon @click="markAsResolved(props.row)" icon="CheckCircleIcon"></feather-icon>
         </vx-tooltip>
       </template>

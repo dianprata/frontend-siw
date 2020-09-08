@@ -44,7 +44,7 @@
                 <div class="vx-col hidden lg:block lg:w-1/3 d-theme-dark-bg">
                   <div class="vx-card__title mb-6 p-8">
                     <h4 class="mb-4">Kontak</h4>
-                    <h6>Jl. Rengganis blok 3B</h6>
+                    <h6>Jl. MT. Haryono RT. 41</h6>
                   </div>
                 </div>
               </div>

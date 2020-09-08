@@ -889,6 +889,7 @@ module.exports = {
     backgroundPosition: false,
     backgroundRepeat: false,
     listStyleType: false,
-  }
+  },
+  purge: false
 
 }

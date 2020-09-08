@@ -22,7 +22,8 @@
         </vs-dropdown-menu>
       </vs-dropdown>
 
-      <vs-button to="/penduduk/tambah">Tambah Penduduk</vs-button>
+      <vs-button to="/penduduk/tambah" class="sm:mb-0 mb-3 sm:mr-2 mr-0">Tambah Penduduk</vs-button>
+      <vs-button @click="openPrompt" color="success">Export</vs-button>
     </div>
 
     <vx-table search :table="table" :max-items="table.meta.per_page">
@@ -88,6 +89,12 @@
         class="mt-5"
         :total="totalPages"
         v-model="currentPage" />
+
+    <vs-prompt title="Export To Excel" class="export-options" @cancel="clearFields" @accept="exportToExcel" accept-text="Export" @close="clearFields" :active.sync="activePrompt">
+      <vs-input v-model="fileName" placeholder="Enter File Name.." class="w-full" />
+      <v-select v-model="selectedType" :options="types" class="my-4" />
+      <v-select v-model="selectedFormat" :options="formats" class="my-4" />
+    </vs-prompt>
   </div>
 </template>
 
@@ -101,7 +108,7 @@
         columns: [
           { key: 'no', label: 'No' },
           { key: 'head_family_nik', label: 'NO KK' },
-          { key: 'name', label: 'Name Kepala Keluarga' },
+          { key: 'name', label: 'Nama Kepala Keluarga' },
           { key: 'address', label: 'Alamat' },
           { key: 'action', label: 'Aksi' }
         ],
@@ -109,6 +116,18 @@
         page: 1,
         perPage: 10
       },
+      activePrompt: false,
+      dataExcel: [],
+      fileName: '',
+      formats: ["xlsx", "csv", "txt"] ,
+      selectedFormat: 'xlsx',
+      types: ['Kartu Keluarga', 'Seluruh Penduduk'],
+      selectedType: 'Kartu Keluarga',
+      cellAutoWidth: true,
+      headerTitleKK: ['NIK KK', 'Nama Kepala Keluarga', 'Alamat', 'Kelurahan', 'Kecamatan', 'Kota', 'Provinsi'],
+      headerValKK: ['head_family_nik', 'name', 'address', 'kelurahan', 'kecamatan', 'city', 'province'],
+      headerTitleSP: ['NIK', 'Nama', 'Alamat', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Pekerjaan'],
+      headerValSP: ['nik_id', 'name', 'address', 'gender', 'birth_place', 'birth_date', 'religion', 'occupation'],
     }),
     computed: {
       paginationPageSize() {
@@ -141,6 +160,61 @@
           }).catch((err) => {
           throw new Error(err);
         });
+      },
+      fetchDataExcel() {
+        const params = `perPage=${this.table.meta.total_record}`;
+        this.$vs.loading();
+        resident.index(params)
+          .then((res) => {
+            const { data } = res.data;
+            this.dataExcel = data.record;
+            this.activePrompt = true;
+            this.$vs.loading.close();
+          }).catch((err) => {
+          throw new Error(err);
+        });
+      },
+      openPrompt() {
+        if(this.table.meta) {
+          this.fetchDataExcel();
+        }
+      },
+      exportToExcel() {
+        import('@/vendor/Export2Excel').then((excel) => {
+          const list = this.dataExcel;
+          const data = this.formatJson(this.selectedType === 'Kartu Keluarga' ? this.headerValKK : this.headerValSP, list);
+          excel.export_json_to_excel({
+            header: this.selectedType === 'Kartu Keluarga' ? this.headerTitleKK : this.headerTitleSP,
+            data,
+            filename: this.fileName,
+            autoWidth: this.cellAutoWidth,
+            bookType: this.selectedFormat
+          });
+          this.clearFields();
+        })
+      },
+      formatJson(filter, jsonData) {
+        if(this.selectedType === 'Kartu Keluarga') {
+          return jsonData.map(v => filter.map(j => {
+            return v.head_family[j];
+          }))
+        } else {
+          let data = [];
+          jsonData.map(v => {
+            v.resident.map(r => {
+              data.push(r);
+            })
+          });
+          return data.map(d => filter.map(j => {
+            return d[j];
+          }))
+        }
+      },
+      clearFields() {
+        this.fileName = '';
+        this.cellAutoWidth = true;
+        this.selectedFormat = 'xlsx';
+        this.selectedType = 'Kartu Keluarga';
       },
       handlePerPage(perPage) {
         this.table.perPage = perPage;

@@ -17,7 +17,7 @@
     </template>
 
     <template slot-scope="{data}">
-      <vs-tr :data="item" v-for="(item, index) in data" :key="index">
+      <vs-tr :data="item" v-for="(item, index) in data" :key="index" :state="item.is_read === 1 || item.is_resolved === 1 ? 'success' : null">
         <vs-td :data="data[index].field" v-for="(field, indexField) in columns" :key="indexField">
           <slot :name="field.key" :row="item" :index="(table.meta.current_page - 1) * table.meta.per_page + index + 1">{{ item[field.key] }}</slot>
         </vs-td>
@@ -37,7 +37,7 @@
     props: {
       table: {
         type: Object
-      }
+      },
     },
     computed: {
       title() {

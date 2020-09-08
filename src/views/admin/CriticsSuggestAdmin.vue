@@ -35,7 +35,7 @@
       </template>
       <template v-slot:aksi="props">
         <vx-tooltip text="Tandai sudah dibaca"
-                    class="text-center">
+                    class="text-center" v-if="props.row.is_read === 0">
           <feather-icon @click="markAsRead(props.row)" icon="MailIcon"></feather-icon>
         </vx-tooltip>
       </template>
