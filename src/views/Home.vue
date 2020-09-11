@@ -47,7 +47,7 @@
 							Dari: {{ comp.resident.name }}
 						</vs-list-item>
 					</vs-list>
-					<div v-if="announcement.length === 0">
+					<div v-if="announcement.length === 0 && complaint.length === 0">
 						<p class="text-center">No Data Available</p>
 					</div>
 				</vx-card>
