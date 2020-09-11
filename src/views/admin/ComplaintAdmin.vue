@@ -36,11 +36,26 @@
       <template v-slot:created_at="props">
         {{ props.row.created_at | date_filter }}
       </template>
+      <template v-slot:status="props">
+        <p class="text-center py-2 text-white" :class="props.row.status === 'acc' ? 'bg-success' : props.row.status === 'pending' ? 'bg-warning' : 'bg-danger'">
+          {{ props.row.status | filterStatus }}
+        </p>
+      </template>
       <template v-slot:aksi="props">
-        <vx-tooltip text="Tandai sudah terselesaikan"
-                    class="text-center" v-if="props.row.is_resolved === 0">
-          <feather-icon @click="markAsResolved(props.row)" icon="CheckCircleIcon"></feather-icon>
-        </vx-tooltip>
+        <div class="flex justify-between">
+          <vx-tooltip text="Tunda Pegaduan"
+                      class="text-center">
+            <feather-icon @click="changeStatus(props.row, 'pending')" icon="AlertCircleIcon" class="text-warning"></feather-icon>
+          </vx-tooltip>
+          <vx-tooltip text="Terima Pengaduan"
+                      class="text-center">
+            <feather-icon @click="changeStatus(props.row, 'acc')" icon="CheckIcon" class="text-success"></feather-icon>
+          </vx-tooltip>
+          <vx-tooltip text="Tolak Pengaduan"
+                      class="text-center">
+            <feather-icon @click="changeStatus(props.row, 'read')" icon="XIcon" class="text-danger"></feather-icon>
+          </vx-tooltip>
+        </div>
       </template>
       <template v-slot:expand-slot="props">
         <div>
@@ -60,6 +75,17 @@
   import complaint from "../../http/complaint";
   export default {
     name: "ComplaintAdmin",
+    filters: {
+      filterStatus(value) {
+        if(value === 'pending') {
+          return 'Ditunda';
+        } else if(value === 'acc') {
+          return 'Diterima';
+        } else {
+          return 'Ditolak';
+        }
+      }
+    },
     data() {
       return {
         table: {
@@ -68,13 +94,14 @@
             { key: 'no', label: 'No' },
             { key: 'type', label: 'Tipe' },
             { key: 'residentName', sortKey: 'resident.name', label: 'Pengirim' },
+            { key: 'status', label: 'Status' },
             { key: 'created_at', label: 'Tanggal Pengaduan' },
             { key: 'aksi' }
           ],
           meta: {},
           page: 1,
           perPage: 10
-        }
+        },
       }
     },
     computed: {
@@ -111,9 +138,37 @@
           throw new Error(err);
         });
       },
-      markAsResolved(data) {
-        if(data.is_resolved === 0) {
-          complaint.markAsResolved(data.id)
+      changeStatus(data, status) {
+        if(status === 'pending') {
+          complaint.markIsPending(data.id)
+            .then(() => {
+              this.$vs.notify({
+                title: 'Berhasil!',
+                text: '',
+                iconPack: 'feather',
+                icon: 'icon-check-circle',
+                color: 'primary'
+              });
+              this.fetchComplaint();
+            }).catch((err) => {
+            throw new Error(err);
+          })
+        } else if(status === 'acc') {
+          complaint.markIsAcc(data.id)
+            .then(() => {
+              this.$vs.notify({
+                title: 'Berhasil!',
+                text: '',
+                iconPack: 'feather',
+                icon: 'icon-check-circle',
+                color: 'primary'
+              });
+              this.fetchComplaint();
+            }).catch((err) => {
+            throw new Error(err);
+          })
+        } else {
+          complaint.markIsRead(data.id)
             .then(() => {
               this.$vs.notify({
                 title: 'Berhasil!',
