@@ -18,7 +18,7 @@
     "chart.js": "^2.8.0",
     "core-js": "2.6.5",
     "echarts": "^4.2.1",
-    "file-saver": "2.0.1",
+    "file-saver": "^2.0.2",
     "firebase": "^6.0.4",
     "instantsearch.css": "^7.3.1",
     "js-cookie": "^2.2.1",
@@ -64,7 +64,7 @@
     "vuejs-datepicker": "^1.5.4",
     "vuesax": "^3.11.0",
     "vuex": "^3.1.1",
-    "xlsx": "^0.15.6"
+    "xlsx": "^0.15.4"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^1.2.0",

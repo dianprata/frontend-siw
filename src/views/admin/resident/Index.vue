@@ -90,7 +90,7 @@
         :total="totalPages"
         v-model="currentPage" />
 
-    <vs-prompt title="Export To Excel" class="export-options" @cancel="clearFields" @accept="exportToExcel" accept-text="Export" @close="clearFields" :active.sync="activePrompt">
+    <vs-prompt title="Export To Excel" class="export-options" @cancel="clearFields" @accept="exportData" accept-text="Export" @close="clearFields" :active.sync="activePrompt">
       <vs-input v-model="fileName" placeholder="Enter File Name.." class="w-full" />
       <v-select v-model="selectedType" :options="types" class="my-4" />
       <v-select v-model="selectedFormat" :options="formats" class="my-4" />
@@ -100,6 +100,9 @@
 
 <script>
   import resident from "@/http/resident";
+  import { saveAs } from 'file-saver'
+  import xlsxHelper from "../../../helper/xlsxHelper";
+
   export default {
     name: "Residents",
     data: () => ({
@@ -119,7 +122,7 @@
       activePrompt: false,
       dataExcel: [],
       fileName: '',
-      formats: ["xlsx", "csv", "txt"] ,
+      formats: ["xlsx", "csv"],
       selectedFormat: 'xlsx',
       types: ['Kartu Keluarga', 'Seluruh Penduduk'],
       selectedType: 'Kartu Keluarga',
@@ -179,19 +182,20 @@
           this.fetchDataExcel();
         }
       },
-      exportToExcel() {
-        import('@/vendor/Export2Excel').then((excel) => {
-          const list = this.dataExcel;
-          const data = this.formatJson(this.selectedType === 'Kartu Keluarga' ? this.headerValKK : this.headerValSP, list);
-          excel.export_json_to_excel({
-            header: this.selectedType === 'Kartu Keluarga' ? this.headerTitleKK : this.headerTitleSP,
-            data,
-            filename: this.fileName,
-            autoWidth: this.cellAutoWidth,
-            bookType: this.selectedFormat
-          });
-          this.clearFields();
-        })
+      exportData() {
+        const list = this.dataExcel;
+        const data = this.formatJson(this.selectedType === 'Kartu Keluarga' ? this.headerValKK : this.headerValSP, list);
+        if(this.selectedFormat === 'xlsx') {
+          const excel = xlsxHelper.exportExcel([this.headerValKK], [data]);
+          saveAs(new Blob([excel],{type: "application/octet-stream"}), `${this.fileName}.xlsx`);
+
+        } else {
+          const csv = xlsxHelper.exportCsv([this.headerValKK], [data]);
+          csv.map((obj, index) => {
+              saveAs(new Blob([obj],{type: "application/octet-stream"}), `${this.fileName}-sheet${index+1}.csv`)
+          })
+        }
+
       },
       formatJson(filter, jsonData) {
         if(this.selectedType === 'Kartu Keluarga') {
