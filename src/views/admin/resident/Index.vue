@@ -178,27 +178,39 @@
         });
       },
       openPrompt() {
-        if(this.table.meta) {
+        if(this.table.meta.hasOwnProperty('total_record')) {
           this.fetchDataExcel();
+        } else {
+          this.$vs.notify({
+            title: 'Ekspor Data',
+            text: 'Mohon tunggu beberapa saat hingga datatables selesai load data!',
+            iconPack: 'feather',
+            icon: 'icon-alert-circle',
+            color: 'warning'
+          });
         }
       },
       exportData() {
-        const list = this.dataExcel;
-        const data = this.formatJson(this.selectedType === 'Kartu Keluarga' ? this.headerValKK : this.headerValSP, list);
-        const headData = this.selectedType === 'Kartu Keluarga' ? this.headerTitleKK : this.headerTitleSP;
-        if(this.selectedFormat === 'xlsx') {
-          const excel = xlsxHelper.exportExcel([headData], [data]);
-          saveAs(new Blob([excel],{type: "application/octet-stream"}), `${this.fileName}.xlsx`);
+        try {
+          const list = this.dataExcel;
+          const data = this.formatArray(this.selectedType === 'Kartu Keluarga' ? this.headerValKK : this.headerValSP, list);
+          const headData = this.selectedType === 'Kartu Keluarga' ? this.headerTitleKK : this.headerTitleSP;
+          if(this.selectedFormat === 'xlsx') {
+            const excel = xlsxHelper.exportExcel([headData], [data]);
+            saveAs(new Blob([excel],{type: "application/octet-stream"}), `${this.fileName}.xlsx`);
 
-        } else {
-          const csv = xlsxHelper.exportCsv([headData], [data]);
-          csv.map((obj, index) => {
+          } else {
+            const csv = xlsxHelper.exportCsv([headData], [data]);
+            csv.map((obj, index) => {
               saveAs(new Blob([obj],{type: "application/octet-stream"}), `${this.fileName}-sheet${index+1}.csv`)
-          })
+            })
+          }
+          this.clearFields();
+        } catch (e) {
+          console.log(e);
         }
-
       },
-      formatJson(filter, jsonData) {
+      formatArray(filter, jsonData) {
         if(this.selectedType === 'Kartu Keluarga') {
           return jsonData.map(v => filter.map(j => {
             return v.head_family[j];

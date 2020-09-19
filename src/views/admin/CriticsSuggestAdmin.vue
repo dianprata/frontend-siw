@@ -21,6 +21,8 @@
           </vs-dropdown-item>
         </vs-dropdown-menu>
       </vs-dropdown>
+
+      <vs-button class="sm:mb-0 mb-3 sm:ml-2 ml-0" @click="openPrompt" color="success">Export</vs-button>
     </div>
 
     <vx-table search :table="table" :max-items="table.meta.per_page">
@@ -50,11 +52,20 @@
         class="mt-5"
         :total="totalPages"
         v-model="currentPage" />
+    <vs-prompt title="Export To Excel" class="export-options" @cancel="clearFields" @accept="exportData" accept-text="Export" @close="clearFields" :active.sync="activePrompt">
+      <vs-input v-model="fileName" placeholder="Enter File Name.." class="w-full" />
+      <v-select v-model="selectedType" :options="types" class="my-4" />
+      <v-select v-model="selectedFormat" :options="formats" class="my-4" />
+    </vs-prompt>
   </div>
 </template>
 
 <script>
   import criticsSuggest from "../../http/criticsSuggest";
+  import xlsxHelper from "../../helper/xlsxHelper";
+  import {saveAs} from "file-saver";
+  import moment from "moment";
+
   export default {
     name: "CriticsSuggestAdmin",
     data() {
@@ -71,7 +82,16 @@
           meta: {},
           page: 1,
           perPage: 10
-        }
+        },
+        activePrompt: false,
+        dataExcel: [],
+        fileName: '',
+        formats: ["xlsx", "csv"],
+        selectedFormat: 'xlsx',
+        types: ['Kritik dan Saran Warga'],
+        selectedType: 'Kritik dan Saran Warga',
+        cellAutoWidth: true,
+        headerTitleComplaint: ['Pengirim', 'Judul', 'Isi', 'Tanggal Pengaduan'],
       }
     },
     computed: {
@@ -95,6 +115,69 @@
       }
     },
     methods: {
+      clearFields() {
+        this.fileName = '';
+        this.cellAutoWidth = true;
+        this.selectedFormat = 'xlsx';
+        this.selectedType = 'Kritik dan Saran Warga';
+      },
+      fetchDataExcel() {
+        const params = `perPage=${this.table.meta.total_record}`;
+        this.$vs.loading();
+        criticsSuggest.index(params)
+          .then((res) => {
+            const { data } = res.data;
+            this.dataExcel = data.record;
+            this.activePrompt = true;
+            this.$vs.loading.close();
+          }).catch((err) => {
+          throw new Error(err);
+        });
+      },
+      openPrompt() {
+        if(this.table.meta.hasOwnProperty('total_record')) {
+          this.fetchDataExcel();
+        } else {
+          this.$vs.notify({
+            title: 'Ekspor Data',
+            text: 'Mohon tunggu beberapa saat hingga datatables selesai load data!',
+            iconPack: 'feather',
+            icon: 'icon-alert-circle',
+            color: 'warning'
+          });
+        }
+      },
+      exportData() {
+       try {
+         const list = this.dataExcel;
+         const data = this.formatArray(list);
+         const headData = this.headerTitleComplaint;
+         if(this.selectedFormat === 'xlsx') {
+           const excel = xlsxHelper.exportExcel([headData], [data]);
+           saveAs(new Blob([excel],{type: "application/octet-stream"}), `${this.fileName}.xlsx`);
+
+         } else {
+           const csv = xlsxHelper.exportCsv([headData], [data]);
+           csv.map((obj, index) => {
+             saveAs(new Blob([obj],{type: "application/octet-stream"}), `${this.fileName}-sheet${index+1}.csv`)
+           })
+         }
+         this.clearFields();
+       } catch (e) {
+         console.log(e);
+       }
+      },
+      formatArray(jsonData) {
+        moment.locale('id');
+        return jsonData.map((obj) => {
+          return [
+            obj.resident.name,
+            obj.subject,
+            obj.body,
+            moment(obj.created_at).format('ddd, DD-MM-YYYY hh:mm')
+          ]
+        })
+      },
       fetchCriticsSuggest() {
         const params = `page=${this.table.page}&perPage=${this.table.perPage}`;
         criticsSuggest.index(params)

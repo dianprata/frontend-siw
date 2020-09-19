@@ -159,32 +159,45 @@
         });
       },
       openPrompt() {
-        if (this.table.meta) {
+        if(this.table.meta.hasOwnProperty('total_record')) {
           this.fetchDataExcel();
+        } else {
+          this.$vs.notify({
+            title: 'Ekspor Data',
+            text: 'Mohon tunggu beberapa saat hingga datatables selesai load data!',
+            iconPack: 'feather',
+            icon: 'icon-alert-circle',
+            color: 'warning'
+          });
         }
       },
       clearFields() {
         this.fileName = '';
         this.cellAutoWidth = true;
         this.selectedFormat = 'xlsx';
-        this.selectedType = 'Kartu Keluarga';
+        this.selectedType = 'Pengaduan Warga';
       },
       exportData() {
-        const list = this.dataExcel;
-        const data = this.formatJson(list);
-        const headData = this.headerTitleComplaint;
-        if(this.selectedFormat === 'xlsx') {
-          const excel = xlsxHelper.exportExcel([headData], [data]);
-          saveAs(new Blob([excel],{type: "application/octet-stream"}), `${this.fileName}.xlsx`);
+        try {
+          const list = this.dataExcel;
+          const data = this.formatArray(list);
+          const headData = this.headerTitleComplaint;
+          if(this.selectedFormat === 'xlsx') {
+            const excel = xlsxHelper.exportExcel([headData], [data]);
+            saveAs(new Blob([excel],{type: "application/octet-stream"}), `${this.fileName}.xlsx`);
 
-        } else {
-          const csv = xlsxHelper.exportCsv([headData], [data]);
-          csv.map((obj, index) => {
-            saveAs(new Blob([obj],{type: "application/octet-stream"}), `${this.fileName}-sheet${index+1}.csv`)
-          })
+          } else {
+            const csv = xlsxHelper.exportCsv([headData], [data]);
+            csv.map((obj, index) => {
+              saveAs(new Blob([obj],{type: "application/octet-stream"}), `${this.fileName}-sheet${index+1}.csv`)
+            })
+          }
+          this.clearFields();
+        } catch (e) {
+          console.log(e);
         }
       },
-      formatJson(jsonData) {
+      formatArray(jsonData) {
         moment.locale('id');
         return jsonData.map((obj) => {
           return [
