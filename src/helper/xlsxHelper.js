@@ -9,7 +9,6 @@ export default {
     const workBook = XLSX.utils.book_new();
 
     headArr.map((obj, index) => {
-      console.log(index);
       dataArr[index].unshift(headArr[index]);
       const workSheet = XLSX.utils.aoa_to_sheet(dataArr[index]);
       XLSX.utils.book_append_sheet(workBook, workSheet, `Sheet ${index+1}`);
