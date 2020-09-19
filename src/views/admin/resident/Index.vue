@@ -185,12 +185,13 @@
       exportData() {
         const list = this.dataExcel;
         const data = this.formatJson(this.selectedType === 'Kartu Keluarga' ? this.headerValKK : this.headerValSP, list);
+        const headData = this.selectedType === 'Kartu Keluarga' ? this.headerTitleKK : this.headerTitleSP;
         if(this.selectedFormat === 'xlsx') {
-          const excel = xlsxHelper.exportExcel([this.headerValKK], [data]);
+          const excel = xlsxHelper.exportExcel([headData], [data]);
           saveAs(new Blob([excel],{type: "application/octet-stream"}), `${this.fileName}.xlsx`);
 
         } else {
-          const csv = xlsxHelper.exportCsv([this.headerValKK], [data]);
+          const csv = xlsxHelper.exportCsv([headData], [data]);
           csv.map((obj, index) => {
               saveAs(new Blob([obj],{type: "application/octet-stream"}), `${this.fileName}-sheet${index+1}.csv`)
           })
