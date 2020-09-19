@@ -121,7 +121,7 @@
         types: ['Pengaduan Warga'],
         selectedType: 'Pengaduan Warga',
         cellAutoWidth: true,
-        headerTitleComplaint: ['Pengirim', 'Tipe', 'Status', 'Tanggal Pengaduan'],
+        headerTitleComplaint: ['Pengirim', 'Tipe', 'Isi', 'Status', 'Tanggal Pengaduan'],
       }
     },
     computed: {
@@ -190,6 +190,7 @@
           return [
             obj.resident.name,
             obj.type,
+            obj.body,
             obj.status,
             moment(obj.created_at).format('ddd, DD-MM-YYYY hh:mm')
           ]
