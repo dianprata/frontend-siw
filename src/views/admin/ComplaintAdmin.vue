@@ -23,6 +23,7 @@
       </vs-dropdown>
 
       <vs-button class="sm:mb-0 mb-3 sm:ml-2 ml-0" @click="openPrompt" color="success">Export</vs-button>
+      <vs-button class="sm:mb-0 mb-3 sm:ml-2 ml-0" @click="printComplaint" color="success">Print</vs-button>
     </div>
 
     <vx-table search :table="table" :max-items="table.meta.per_page">
@@ -75,6 +76,22 @@
       <v-select v-model="selectedType" :options="types" class="my-4" />
       <v-select v-model="selectedFormat" :options="formats" class="my-4" />
     </vs-prompt>
+    <div id="printComplaint" v-show="false">
+      <table class="table">
+        <thead class="thead-light">
+        <tr>
+          <th scope="col" v-for="(data, index) in headerTitleComplaint" :key="index">
+            {{ data }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(dataData, indexData) in dataArr" :key="indexData">
+          <td v-for="(data, index) in dataData" :key="index">{{ data }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -115,6 +132,7 @@
         },
         activePrompt: false,
         dataExcel: [],
+        dataArr: [],
         fileName: '',
         formats: ["xlsx", "csv"],
         selectedFormat: 'xlsx',
@@ -122,6 +140,7 @@
         selectedType: 'Pengaduan Warga',
         cellAutoWidth: true,
         headerTitleComplaint: ['Pengirim', 'Tipe', 'Isi', 'Status', 'Tanggal Pengaduan'],
+        isFetchedPrintData: false
       }
     },
     computed: {
@@ -209,6 +228,19 @@
           ]
         })
       },
+      printComplaint() {
+        if(this.isFetchedPrintData) {
+          this.$htmlToPaper('printComplaint');
+        } else {
+          this.$vs.notify({
+            title: 'Ekspor Data',
+            text: 'Mohon tunggu beberapa saat hingga datatables selesai load data!',
+            iconPack: 'feather',
+            icon: 'icon-alert-circle',
+            color: 'warning'
+          });
+        }
+      },
       fetchComplaint() {
         const params = `page=${this.table.page}&perPage=${this.table.perPage}`;
         complaint.index(params)
@@ -217,6 +249,18 @@
             if(data) {
               this.table.data = data.record;
               this.table.meta = data.meta_pagination;
+
+              const params = `perPage=${this.table.meta.total_record}`;
+              complaint.index(params)
+                .then((res) => {
+                  const { data } = res.data;
+                  this.dataExcel = data.record;
+                  const list = this.dataExcel;
+                  this.dataArr = this.formatArray(list);
+                  this.isFetchedPrintData = true;
+                }).catch((err) => {
+                throw new Error(err);
+              });
             }
           }).catch((err) => {
           throw new Error(err);

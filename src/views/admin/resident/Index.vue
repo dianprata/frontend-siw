@@ -23,7 +23,9 @@
       </vs-dropdown>
 
       <vs-button to="/penduduk/tambah" class="sm:mb-0 mb-3 sm:mr-2 mr-0">Tambah Penduduk</vs-button>
-      <vs-button @click="openPrompt" color="success">Export</vs-button>
+      <vs-button @click="openPrompt" color="success" class="sm:mb-0 mb-3 sm:mr-2 mr-0">Export</vs-button>
+      <vs-button @click="printKK" color="success" class="sm:mb-0 mb-3 sm:mr-2 mr-0">Print KK</vs-button>
+      <vs-button @click="printSP" color="success">Print Seluruh Penduduk</vs-button>
     </div>
 
     <vx-table search :table="table" :max-items="table.meta.per_page">
@@ -95,12 +97,44 @@
       <v-select v-model="selectedType" :options="types" class="my-4" />
       <v-select v-model="selectedFormat" :options="formats" class="my-4" />
     </vs-prompt>
+    <div id="printKK" v-show="false">
+      <table class="table">
+        <thead class="thead-light">
+        <tr>
+          <th scope="col" v-for="(data, index) in headerTitleKK" :key="index">
+            {{ data }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(dataKK, indexKK) in kkArr" :key="indexKK">
+          <td v-for="(data, index) in dataKK" :key="index">{{ data }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="printSP" v-show="false">
+      <table class="table">
+        <thead class="thead-light">
+        <tr>
+          <th scope="col" v-for="(data, index) in headerTitleSP" :key="index">
+            {{ data }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(dataKK, indexKK) in spArr" :key="indexKK">
+          <td v-for="(data, index) in dataKK" :key="index">{{ data }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
   import resident from "@/http/resident";
-  import { saveAs } from 'file-saver'
+  import {saveAs} from 'file-saver'
   import xlsxHelper from "../../../helper/xlsxHelper";
 
   export default {
@@ -129,8 +163,11 @@
       cellAutoWidth: true,
       headerTitleKK: ['NIK KK', 'Nama Kepala Keluarga', 'Alamat', 'Kelurahan', 'Kecamatan', 'Kota', 'Provinsi'],
       headerValKK: ['head_family_nik', 'name', 'address', 'kelurahan', 'kecamatan', 'city', 'province'],
+      kkArr: [],
       headerTitleSP: ['NIK', 'Nama', 'Alamat', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'Agama', 'Pekerjaan'],
       headerValSP: ['nik_id', 'name', 'address', 'gender', 'birth_place', 'birth_date', 'religion', 'occupation'],
+      spArr: [],
+      isFetchedPrintData: false
     }),
     computed: {
       paginationPageSize() {
@@ -160,6 +197,22 @@
             const { data } = res.data;
             this.table.data = data.record;
             this.table.meta = data.meta_pagination;
+
+            const params = `perPage=${this.table.meta.total_record}`;
+            resident.index(params)
+              .then(async (res) => {
+                const { data } = res.data;
+                this.dataExcel = data.record;
+                const list = this.dataExcel;
+                this.selectedType = 'Kartu Keluarga';
+                this.kkArr = await this.formatArray(this.headerValKK, list);
+                this.selectedType = 'Seluruh Penduduk';
+                this.spArr = await this.formatArray(this.headerValSP, list);
+                this.selectedType = 'Kartu Keluarga';
+                this.isFetchedPrintData = true;
+              }).catch((err) => {
+              throw new Error(err);
+            });
           }).catch((err) => {
           throw new Error(err);
         });
@@ -180,6 +233,32 @@
       openPrompt() {
         if(this.table.meta.hasOwnProperty('total_record')) {
           this.fetchDataExcel();
+        } else {
+          this.$vs.notify({
+            title: 'Ekspor Data',
+            text: 'Mohon tunggu beberapa saat hingga datatables selesai load data!',
+            iconPack: 'feather',
+            icon: 'icon-alert-circle',
+            color: 'warning'
+          });
+        }
+      },
+      printKK() {
+        if(this.isFetchedPrintData) {
+          this.$htmlToPaper('printKK');
+        } else {
+          this.$vs.notify({
+            title: 'Ekspor Data',
+            text: 'Mohon tunggu beberapa saat hingga datatables selesai load data!',
+            iconPack: 'feather',
+            icon: 'icon-alert-circle',
+            color: 'warning'
+          });
+        }
+      },
+      printSP() {
+        if(this.isFetchedPrintData) {
+          this.$htmlToPaper('printSP');
         } else {
           this.$vs.notify({
             title: 'Ekspor Data',
